@@ -654,11 +654,24 @@ window.__anchorTransportLoadError = false;
     const btn = document.getElementById('btn-wcw');
     btn.disabled = true; btn.textContent = '⏳…';
     try {
-      const WaxJS = window.waxjs?.WaxJS || window.WaxJS || window.waxjs;
-      if (!WaxJS) throw new Error('waxjs non chargé — vérifie ta connexion');
+      if (window.__waxjsLoadError) throw new Error('waxjs non chargé — vérifie ta connexion internet et recharge la page.');
+
+      // waxjs@latest exporte la classe sous window.waxjs.WaxJS
+      // On résout la classe en testant explicitement chaque emplacement possible
+      let WaxJS = null;
+      if (typeof window.waxjs === 'function') {
+        WaxJS = window.waxjs;                        // module = la classe directement
+      } else if (window.waxjs && typeof window.waxjs.WaxJS === 'function') {
+        WaxJS = window.waxjs.WaxJS;                  // module.WaxJS (cas le plus courant)
+      } else if (typeof window.WaxJS === 'function') {
+        WaxJS = window.WaxJS;                        // export global alternatif
+      }
+
+      if (!WaxJS) throw new Error('Classe WaxJS introuvable — vérifie ta connexion et recharge la page.');
+
       wax = new WaxJS({ rpcEndpoint: RPC, tryAutoLogin: false });
       const account = await wax.login();
-      if (!account) throw new Error('Connexion annulée');
+      if (!account) throw new Error('Connexion annulée ou refusée');
       setConnected(account, 'wcw');
       showToast('✅ WCW : ' + account, 'success');
     } catch(e) {
@@ -1015,7 +1028,8 @@ window.__anchorTransportLoadError = false;
 
       let result;
       if (walletType === 'wcw') {
-        result = await wax.api.transact({ actions: [action] }, { blocksBehind: 3, expireSeconds: 30 });
+        // WaxJS expose transact() directement sur l'instance (pas via .api)
+        result = await wax.transact({ actions: [action] }, { blocksBehind: 3, expireSeconds: 30 });
       } else {
         result = await anchorSess.transact({ action });
       }
