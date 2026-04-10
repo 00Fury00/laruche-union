@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAO Candidats - EYEKEUNN & MAGORUNN</title>
+<script>
+window.__waxjsLoadError = false;
+window.__anchorLinkLoadError = false;
+window.__anchorTransportLoadError = false;
+</script>
+<script src="https://unpkg.com/waxjs@1.2.3/dist/waxjs.js" onerror="window.__waxjsLoadError=true"></script>
+<script src="https://unpkg.com/anchor-link@3.6.0" onerror="window.__anchorLinkLoadError=true"></script>
+<script src="https://unpkg.com/anchor-link-browser-transport@3.6.1" onerror="window.__anchorTransportLoadError=true"></script>
+  <style>
+    :root {
+      --bg: #1a1a1a;
+      --surface: #242424;
+      --surface2: #2e2e2e;
+      --border: #3a3a3a;
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --green-bg: rgba(0, 255, 136, 0.08);
+      --text: #e8e8e8;
+      --text-muted: #888;
+      --red: #ff4444;
+      --gold: #ffd700;
+      --elected-bg: rgba(0, 255, 136, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      color: var(--green);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── WALLET ── */
+    #walletBtn {
+      background: var(--green);
+      border: none;
+      padding: 8px 16px;
+      color: #000;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      transition: background 0.2s;
+    }
+    #walletBtn:hover { background: var(--green-dim); }
+    #walletBtn.connected {
+      background: transparent;
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+
+    #walletInfo {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ── REFRESH ── */
+    #refreshToggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    #refreshToggle.on {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ── MAIN ── */
+    .main { padding: 24px; }
+
+    /* ── SECTION ── */
+    .section { margin-bottom: 48px; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      color: var(--green);
+      letter-spacing: 3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .elected-badge {
+      font-size: 10px;
+      background: var(--green);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      vertical-align: middle;
+    }
+
+    /* ── VOTE PANEL ── */
+    .vote-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .vote-selection {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .vote-label {
+      color: var(--text-muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .vote-slots {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .vote-slot {
+      background: var(--surface2);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      padding: 5px 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 110px;
+      text-align: center;
+      position: relative;
+    }
+
+    .vote-slot.filled {
+      border-style: solid;
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .vote-slot .remove-vote {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--red);
+      font-size: 14px;
+      line-height: 1;
+      background: none;
+      border: none;
+      padding: 0 2px;
+      display: none;
+    }
+    .vote-slot.filled .remove-vote { display: inline; }
+
+    .vote-count {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .vote-count span { color: var(--green); font-weight: bold; }
+
+    .btn-vote {
+      background: var(--green);
+      border: none;
+      padding: 9px 20px;
+      color: #000;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .btn-vote:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .btn-vote:not(:disabled):hover { background: var(--green-dim); }
+
+    .btn-clear {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-clear:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── STATUS ── */
+    .tx-status {
+      margin-top: 10px;
+      font-size: 11px;
+      padding: 8px 14px;
+      border-radius: 4px;
+      display: none;
+    }
+    .tx-status.success {
+      display: block;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid var(--green);
+      color: var(--green);
+    }
+    .tx-status.error {
+      display: block;
+      background: rgba(255,68,68,0.1);
+      border: 1px solid var(--red);
+      color: var(--red);
+    }
+    .tx-status.loading {
+      display: block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: var(--surface);
+    }
+
+    th, td {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #1a1a1a;
+      color: var(--green);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { color: #fff; }
+
+    tbody tr { transition: background 0.15s; }
+    tbody tr:hover { background: var(--surface2); }
+
+    /* Elected rows (top 5 by rank) */
+    tbody tr.elected {
+      background: var(--elected-bg);
+    }
+    tbody tr.elected:hover { background: rgba(0,255,136,0.1); }
+
+    .rank-badge {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: bold;
+      line-height: 20px;
+      text-align: center;
+    }
+    .rank-badge.elected {
+      background: var(--green);
+      color: #000;
+    }
+    .rank-badge.not-elected {
+      background: var(--surface2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .candidate-name { color: var(--green); font-weight: bold; }
+
+    td.active-1 { color: var(--green); }
+    td.active-0 { color: var(--text-muted); }
+
+    /* Checkbox column */
+    .check-col { width: 36px; }
+
+    .vote-check {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      background: var(--surface2);
+      cursor: pointer;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      transition: all 0.15s;
+    }
+    .vote-check:checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+    .vote-check:checked::after {
+      content: '✓';
+      position: absolute;
+      color: #000;
+      font-size: 11px;
+      font-weight: bold;
+      top: -1px;
+      left: 1px;
+    }
+    .vote-check:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 12px;
+      max-width: 340px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 999;
+    }
+    #toast.show { opacity: 1; }
+    #toast.success { background: #1a3d2b; border: 1px solid var(--green); color: var(--green); }
+    #toast.error   { background: #3d1a1a; border: 1px solid var(--red);   color: var(--red); }
+    #toast.info    { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+
+    .status-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--text-muted);
+      display: inline-block; flex-shrink: 0;
+      transition: all .4s;
+    }
+    .status-dot.connected { background: var(--green); box-shadow: 0 0 8px var(--green); }
+    .status-dot.error     { background: var(--red);   box-shadow: 0 0 8px var(--red); }
+
+    .wallet-badge {
+      font-size: 10px; padding: 1px 7px; border-radius: 3px; letter-spacing: 1px;
+    }
+    .wallet-badge.wcw    { background: rgba(0,255,136,.12); border: 1px solid var(--green); color: var(--green); }
+    .wallet-badge.anchor { background: rgba(100,120,255,.12); border: 1px solid #6478ff; color: #8899ff; }
+
+    #btn-wcw, #btn-anchor {
+      background: var(--surface2); border: 1px solid var(--border);
+      padding: 7px 13px; color: var(--text); font-family: 'Courier New', monospace;
+      font-size: 11px; cursor: pointer; border-radius: 4px; transition: all .2s;
+    }
+    #btn-wcw:hover    { border-color: var(--green); color: var(--green); }
+    #btn-anchor:hover { border-color: #6478ff; color: #8899ff; }
+    #btn-wcw:disabled, #btn-anchor:disabled { opacity: .35; cursor: not-allowed; }
+
+    #btn-disconnect {
+      background: transparent; border: 1px solid var(--border);
+      padding: 7px 13px; color: var(--text-muted); font-family: 'Courier New', monospace;
+      font-size: 11px; cursor: pointer; border-radius: 4px; transition: all .2s;
+    }
+    #btn-disconnect:hover { border-color: var(--red); color: var(--red); }
+
+    .loading-row td {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 20px;
+    }
+
+    /* Gold for #1 rank */
+    tbody tr:first-child .rank-badge.elected { background: var(--gold); }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⬡ DAO Candidats</h1>
+  <div class="header-controls">
+    <button id="refreshToggle">⏹ Auto Refresh: OFF</button>
+    <div id="wallet-status-bar" style="display:flex;align-items:center;gap:8px;font-size:11px;">
+      <span class="status-dot" id="dot"></span>
+      <span id="wallet-text">Non connecté</span>
+      <span id="wallet-badge-display" class="wallet-badge" style="display:none"></span>
+    </div>
+    <span id="account-display" style="font-size:11px;color:var(--green);display:none"></span>
+    <button id="btn-wcw"        onclick="connectWCW()">🔗 WCW</button>
+    <button id="btn-anchor"     onclick="connectAnchor()">⚓ Anchor</button>
+    <button id="btn-disconnect" onclick="disconnectWallet()" style="display:none">Déconnecter</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- EYEKEUNN -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">
+        EYEKEUNN
+        <span class="elected-badge">TOP 5 ÉLUS</span>
+      </div>
+    </div>
+
+    <div class="vote-panel" id="eyekeunnVotePanel">
+      <div class="vote-selection">
+        <span class="vote-label">VOTES :</span>
+        <div class="vote-slots" id="eyekeunnSlots">
+          <div class="vote-slot" id="eyekeunn-slot-0">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="0">✕</button></div>
+          <div class="vote-slot" id="eyekeunn-slot-1">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="1">✕</button></div>
+        </div>
+        <span class="vote-count">(<span id="eyekeunnCount">0</span>/2)</span>
+      </div>
+      <button class="btn-clear" onclick="clearVotes('eyekeunn')">Effacer</button>
+      <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">▶ VOTER</button>
+    </div>
+    <div class="tx-status" id="eyekeunnStatus"></div>
+
+    <div class="table-wrap">
+      <table id="eyekeunnTable">
+        <thead>
+          <tr>
+            <th class="check-col">✓</th>
+            <th>#</th>
+            <th>Candidat</th>
+            <th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th>
+            <th>Vote Power</th>
+            <th>Actif</th>
+            <th>Votants</th>
+            <th>Dernier vote reçu</th>
+            <th>Votants récents</th>
+            <th>TLM STACK</th>
+          </tr>
+        </thead>
+        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MAGORUNN -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">
+        MAGORUNN
+        <span class="elected-badge">TOP 5 ÉLUS</span>
+      </div>
+    </div>
+
+    <div class="vote-panel" id="magorunnVotePanel">
+      <div class="vote-selection">
+        <span class="vote-label">VOTES :</span>
+        <div class="vote-slots" id="magorunnSlots">
+          <div class="vote-slot" id="magorunn-slot-0">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="0">✕</button></div>
+          <div class="vote-slot" id="magorunn-slot-1">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="1">✕</button></div>
+        </div>
+        <span class="vote-count">(<span id="magorunnCount">0</span>/2)</span>
+      </div>
+      <button class="btn-clear" onclick="clearVotes('magorunn')">Effacer</button>
+      <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">▶ VOTER</button>
+    </div>
+    <div class="tx-status" id="magorunnStatus"></div>
+
+    <div class="table-wrap">
+      <table id="magorunnTable">
+        <thead>
+          <tr>
+            <th class="check-col">✓</th>
+            <th>#</th>
+            <th>Candidat</th>
+            <th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th>
+            <th>Vote Power</th>
+            <th>Actif</th>
+            <th>Votants</th>
+            <th>Dernier vote reçu</th>
+            <th>Votants récents</th>
+            <th>TLM STACK</th>
+          </tr>
+        </thead>
+        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NARONUNN -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">
+        NARONUNN
+        <span class="elected-badge">TOP 5 ÉLUS</span>
+      </div>
+    </div>
+
+    <div class="vote-panel" id="narorunnVotePanel">
+      <div class="vote-selection">
+        <span class="vote-label">VOTES :</span>
+        <div class="vote-slots" id="naronunnSlots">
+          <div class="vote-slot" id="naronunn-slot-0">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="0">✕</button></div>
+          <div class="vote-slot" id="naronunn-slot-1">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="1">✕</button></div>
+        </div>
+        <span class="vote-count">(<span id="naronunnCount">0</span>/2)</span>
+      </div>
+      <button class="btn-clear" onclick="clearVotes('naronunn')">Effacer</button>
+      <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">▶ VOTER</button>
+    </div>
+    <div class="tx-status" id="naronunnStatus"></div>
+
+    <div class="table-wrap">
+      <table id="naronunnTable">
+        <thead>
+          <tr>
+            <th class="check-col">✓</th>
+            <th>#</th>
+            <th>Candidat</th>
+            <th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th>
+            <th>Vote Power</th>
+            <th>Actif</th>
+            <th>Votants</th>
+            <th>Dernier vote reçu</th>
+            <th>Votants récents</th>
+            <th>TLM STACK</th>
+          </tr>
+        </thead>
+        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // ── CONFIG ──
+  const MAX_VOTES     = 2;
+  const ELECTED_COUNT = 5;
+  const RPC           = "https://wax.eosphere.io";
+  const WAX_CHAIN_ID  = '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4';
+  const scopes = ['eyekeunn', 'magorunn', 'naronunn'];
+  const specialNames = ['phlbq.wam', '.p2bu.wam', 'ffnjw.wam', 'c5qri.wam'];
+
+  // ── STATE ──
+  const candidatesData = { eyekeunn: [], magorunn: [], naronunn: [] };
+  const selectedVotes  = { eyekeunn: [], magorunn: [], naronunn: [] };
+  const sortOrders     = { eyekeunn: false, magorunn: false, naronunn: false };
+
+  let wax         = null;   // WaxJS instance
+  let anchorLink  = null;   // AnchorLink instance
+  let anchorSess  = null;   // AnchorLink session
+  let userAccount = null;
+  let walletType  = null;   // 'wcw' | 'anchor'
+  let autoRefresh = false;
+  let refreshInterval = null;
+
+  /* ── WALLET UI HELPERS ── */
+  function setDot(cls) {
+    document.getElementById('dot').className = 'status-dot ' + cls;
+  }
+
+  function setConnected(account, type) {
+    userAccount = account;
+    walletType  = type;
+    setDot('connected');
+    document.getElementById('wallet-text').textContent = 'Connecté';
+    document.getElementById('account-display').textContent = account;
+    document.getElementById('account-display').style.display = '';
+    document.getElementById('btn-disconnect').style.display = '';
+    document.getElementById('btn-wcw').disabled    = true;
+    document.getElementById('btn-anchor').disabled = true;
+    const badge = document.getElementById('wallet-badge-display');
+    badge.textContent   = type === 'wcw' ? 'WCW' : 'ANCHOR';
+    badge.className     = 'wallet-badge ' + type;
+    badge.style.display = '';
+    updateVoteButtons();
+  }
+
+  function resetWalletUI() {
+    userAccount = null; walletType = null; wax = null; anchorSess = null;
+    setDot('');
+    document.getElementById('wallet-text').textContent       = 'Non connecté';
+    document.getElementById('account-display').style.display = 'none';
+    document.getElementById('btn-disconnect').style.display  = 'none';
+    document.getElementById('btn-wcw').disabled    = false;
+    document.getElementById('btn-anchor').disabled = false;
+    document.getElementById('wallet-badge-display').style.display = 'none';
+    updateVoteButtons();
+  }
+
+  /* ── CONNECT WCW ── */
+  async function connectWCW() {
+    const btn = document.getElementById('btn-wcw');
+    btn.disabled = true; btn.textContent = '⏳…';
+    try {
+      const WaxJS = window.waxjs?.WaxJS || window.WaxJS || window.waxjs;
+      if (!WaxJS) throw new Error('waxjs non chargé — vérifie ta connexion');
+      wax = new WaxJS({ rpcEndpoint: RPC, tryAutoLogin: false });
+      const account = await wax.login();
+      if (!account) throw new Error('Connexion annulée');
+      setConnected(account, 'wcw');
+      showToast('✅ WCW : ' + account, 'success');
+    } catch(e) {
+      setDot('error');
+      showToast('❌ ' + (e?.message || String(e)), 'error');
+      wax = null;
+    }
+    btn.disabled = false; btn.textContent = '🔗 WCW';
+  }
+
+  /* ── ANCHOR ensureLink ── */
+  async function ensureAnchorLink() {
+    if (anchorLink) return anchorLink;
+    if (window.__anchorLinkLoadError || window.__anchorTransportLoadError) {
+      throw new Error('Impossible de charger les librairies Anchor. Vérifie ta connexion et recharge la page.');
+    }
+    const AnchorLink = window.AnchorLink?.default || window.AnchorLink;
+    const AnchorLinkBrowserTransport = window.AnchorLinkBrowserTransport?.default || window.AnchorLinkBrowserTransport;
+    if (!AnchorLink || !AnchorLinkBrowserTransport) {
+      throw new Error('Les librairies Anchor ne sont pas disponibles.');
+    }
+    const transport = new AnchorLinkBrowserTransport();
+    anchorLink = new AnchorLink({
+      transport,
+      chains: [{ chainId: WAX_CHAIN_ID, nodeUrl: RPC }]
+    });
+    return anchorLink;
+  }
+
+  /* ── CONNECT ANCHOR ── */
+  async function connectAnchor() {
+    const btn = document.getElementById('btn-anchor');
+    btn.disabled = true; btn.textContent = '⏳…';
+    try {
+      const link     = await ensureAnchorLink();
+      const identity = await link.login('DAO Candidats Vote');
+      const session  = identity?.session;
+      const actor    = String(session?.auth?.actor || '');
+      if (!session || !actor) throw new Error('Anchor n\'a pas retourné de session.');
+      anchorSess = session;
+      setConnected(actor, 'anchor');
+      showToast('✅ Anchor : ' + actor, 'success');
+    } catch(e) {
+      setDot('error');
+      anchorSess = null;
+      showToast('❌ Anchor : ' + (e?.message || String(e)), 'error');
+    }
+    btn.disabled = false; btn.textContent = '⚓ Anchor';
+  }
+
+  /* ── DISCONNECT ── */
+  async function disconnectWallet() {
+    if (walletType === 'anchor' && anchorSess) {
+      try { if (anchorSess.remove) await anchorSess.remove(); } catch(_) {}
+    }
+    resetWalletUI();
+    showToast('Déconnecté', 'info');
+  }
+
+  // ── DATA LOAD ──
+  const RPC_ENDPOINTS = [
+    'https://wax.eosphere.io',
+    'https://api.wax.alohaeos.com',
+    'https://wax.cryptolions.io',
+    'https://api.waxsweden.org'
+  ];
+
+  async function loadCandidates(scope) {
+    const tbody = document.querySelector(`#${scope}Table tbody`);
+    const colspanCount = 10; // toutes les tables ont maintenant TLM STACK
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="${colspanCount}">⟳ Chargement...</td></tr>`;
+
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + "/v1/chain/get_table_rows", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            json: true,
+            code: "dao.worlds",
+            scope: scope,
+            table: "candidates",
+            limit: 100
+          })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.rows) throw new Error('Pas de rows');
+        candidatesData[scope] = data.rows;
+        await fetchVoteHistory(scope);
+        await fetchTlmStack(scope, data.rows);
+        sortTableByRank(scope, false);
+        return; // succès, on arrête
+      } catch(e) {
+        console.warn(`[${scope}] Échec ${endpoint}:`, e.message);
+      }
+    }
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="${colspanCount}" style="color:var(--red)">❌ Impossible de charger les données — vérifie ta connexion</td></tr>`;
+  }
+
+  // ── VOTE HISTORY CACHE ──
+  // voteHistory[scope][candidate_name] = { block_time, voters: [...] }
+  const voteHistory = { eyekeunn: {}, magorunn: {}, naronunn: {} };
+
+  // ── TLM STACK CACHE (tous les scopes) ──
+  const tlmWeights = { eyekeunn: {}, magorunn: {}, naronunn: {} };
+
+  const HISTORY_ENDPOINTS = [
+    'https://wax.eosphere.io',
+    'https://api.waxsweden.org',
+    'https://wax.cryptolions.io'
+  ];
+
+  async function fetchTlmStack(scope, candidates) {
+    // token.worlds / table stakes / scope = dac_id → champ "stake"
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + "/v1/chain/get_table_rows", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            json: true,
+            code: "token.worlds",
+            scope: scope,
+            table: "stakes",
+            limit: 200
+          })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.rows) throw new Error('Pas de rows');
+        data.rows.forEach(row => {
+          tlmWeights[scope][row.account] = row.stake;
+        });
+        return;
+      } catch(e) {
+        console.warn(`[tlmStack:${scope}] Échec ${endpoint}:`, e.message);
+      }
+    }
+  }
+
+  async function fetchVoteHistory(scope) {
+    // Interroge l'historique des actions votecust sur dao.worlds pour ce scope
+    // On récupère les 200 dernières actions et on extrait le dernier vote par candidat
+    for (const endpoint of HISTORY_ENDPOINTS) {
+      try {
+        const res = await fetch(`${endpoint}/v2/history/get_actions?account=dao.worlds&filter=dao.worlds:votecust&limit=200&sort=desc`, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.actions) throw new Error('Pas d\'actions');
+
+        // Pour chaque action votecust, on regarde le dac_id et les newvotes
+        data.actions.forEach(action => {
+          const act = action.act?.data;
+          if (!act || act.dac_id !== scope) return;
+
+          const blockTime = action.timestamp; // "2026-04-03T09:05:44.500"
+          const voter     = act.voter;
+          const newvotes  = act.newvotes || [];
+
+          // Pour chaque candidat voté, on enregistre le vote le plus récent
+          newvotes.forEach(candidate => {
+            if (!voteHistory[scope][candidate]) {
+              voteHistory[scope][candidate] = { block_time: blockTime, voters: [voter] };
+            } else {
+              // On garde uniquement le plus récent (les actions sont triées desc)
+              if (!voteHistory[scope][candidate].voters.includes(voter)) {
+                voteHistory[scope][candidate].voters.push(voter);
+              }
+              // block_time déjà le plus récent car on traite en desc
+            }
+          });
+        });
+
+        return; // succès
+      } catch(e) {
+        console.warn(`[history:${scope}] Échec ${endpoint}:`, e.message);
+      }
+    }
+  }
+  function renderTable(scope, data) {
+    const tbody = document.querySelector(`#${scope}Table tbody`);
+    tbody.innerHTML = "";
+
+    const sorted = [...data].sort((a,b) => Number(b.rank) - Number(a.rank));
+    const electedNames = new Set(
+      sorted.filter(r => Number(r.rank) > 0).slice(0, ELECTED_COUNT).map(r => r.candidate_name)
+    );
+
+    data.forEach((row, index) => {
+      const isSpecial  = specialNames.includes(row.candidate_name);
+      const isElected  = electedNames.has(row.candidate_name);
+      const isSelected = selectedVotes[scope].includes(row.candidate_name);
+      const rank       = index + 1;
+
+      const tr = document.createElement("tr");
+      if (isElected) tr.classList.add('elected');
+
+      const atMax = selectedVotes[scope].length >= MAX_VOTES;
+      const checkDisabled = atMax && !isSelected ? 'disabled' : '';
+
+      // Données issues de l'historique des transactions
+      const hist     = voteHistory[scope][row.candidate_name];
+      const lastVote = hist
+        ? hist.block_time.replace('T', ' ').replace(/\.\d+$/, '')
+        : '–';
+      const voters   = hist && hist.voters.length
+        ? hist.voters.slice(0, 3).join(', ') + (hist.voters.length > 3 ? ` +${hist.voters.length - 3}` : '')
+        : '–';
+
+      // TLM STACK
+      const stakeStr = tlmWeights[scope]?.[row.candidate_name];
+      let tlmVal = '–';
+      if (stakeStr !== undefined) {
+        const parts = String(stakeStr).split(' ');
+        const amount = parseFloat(parts[0]);
+        const symbol = parts[1] || '';
+        tlmVal = isNaN(amount) ? stakeStr
+          : Number(amount).toLocaleString('fr-FR', { minimumFractionDigits: 0, maximumFractionDigits: 4 })
+            + ' <span style="font-size:9px;color:var(--text-muted)">' + symbol + '</span>';
+      }
+      const tlmStackCell = `<td style="color:var(--gold);font-size:11px">${tlmVal}</td>`;
+
+      tr.innerHTML = `
+        <td class="check-col">
+          <input type="checkbox" class="vote-check"
+            data-scope="${scope}"
+            data-candidate="${row.candidate_name}"
+            ${isSelected ? 'checked' : ''}
+            ${checkDisabled}>
+        </td>
+        <td>
+          <span class="rank-badge ${isElected ? 'elected' : 'not-elected'}">${rank}</span>
+        </td>
+        <td class="${isSpecial ? 'candidate-name' : ''}">${row.candidate_name}</td>
+        <td>${Number(row.rank).toLocaleString()}</td>
+        <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
+        <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
+        <td>${row.number_voters}</td>
+        <td style="color:var(--green);font-size:11px">${lastVote}</td>
+        <td style="font-size:10px;color:var(--text-muted)">${voters}</td>
+        ${tlmStackCell}
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.vote-check').forEach(cb => {
+      cb.addEventListener('change', onCheckboxChange);
+    });
+  }
+
+  // ── CHECKBOX HANDLER ──
+  function onCheckboxChange(e) {
+    const scope     = e.target.dataset.scope;
+    const candidate = e.target.dataset.candidate;
+    const checked   = e.target.checked;
+
+    if (checked) {
+      if (selectedVotes[scope].length >= MAX_VOTES) {
+        e.target.checked = false;
+        showToast(`Maximum ${MAX_VOTES} candidats par DAO`, 'error');
+        return;
+      }
+      selectedVotes[scope].push(candidate);
+    } else {
+      selectedVotes[scope] = selectedVotes[scope].filter(v => v !== candidate);
+    }
+
+    updateSlotsUI(scope);
+    renderTable(scope, candidatesData[scope]); // re-render to update disabled states
+    updateVoteButtons();
+  }
+
+  // ── SLOTS UI ──
+  function updateSlotsUI(scope) {
+    const votes = selectedVotes[scope];
+    for (let i = 0; i < MAX_VOTES; i++) {
+      const slot = document.getElementById(`${scope}-slot-${i}`);
+      const btn  = slot.querySelector('.remove-vote');
+      if (votes[i]) {
+        slot.classList.add('filled');
+        // Update text node (first child)
+        slot.childNodes[0].textContent = votes[i];
+        btn.style.display = 'inline';
+      } else {
+        slot.classList.remove('filled');
+        slot.childNodes[0].textContent = '— vide —';
+        btn.style.display = 'none';
+      }
+    }
+    document.getElementById(`${scope}Count`).textContent = votes.length;
+  }
+
+  // ── REMOVE FROM SLOT ──
+  document.querySelectorAll('.remove-vote').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const scope = btn.dataset.scope;
+      const idx   = parseInt(btn.dataset.idx);
+      const candidate = selectedVotes[scope][idx];
+      if (!candidate) return;
+      selectedVotes[scope].splice(idx, 1);
+      updateSlotsUI(scope);
+      renderTable(scope, candidatesData[scope]);
+      updateVoteButtons();
+    });
+  });
+
+  // ── CLEAR ──
+  function clearVotes(scope) {
+    selectedVotes[scope] = [];
+    updateSlotsUI(scope);
+    renderTable(scope, candidatesData[scope]);
+    updateVoteButtons();
+  }
+
+  // ── VOTE BUTTONS STATE ──
+  function updateVoteButtons() {
+    scopes.forEach(scope => {
+      const btn = document.getElementById(`${scope}VoteBtn`);
+      btn.disabled = !userAccount || selectedVotes[scope].length === 0;
+    });
+  }
+
+  // ── SUBMIT VOTE ──
+  async function submitVote(scope) {
+    if (!userAccount) {
+      showToast('Connecte Anchor d\'abord !', 'error');
+      return;
+    }
+    if (selectedVotes[scope].length === 0) {
+      showToast('Sélectionne au moins 1 candidat', 'error');
+      return;
+    }
+
+    const statusEl = document.getElementById(`${scope}Status`);
+    const btn      = document.getElementById(`${scope}VoteBtn`);
+
+    setStatus(statusEl, 'loading', '⟳ Envoi de la transaction en cours...');
+    btn.disabled = true;
+
+    try {
+      const action = {
+        account: 'dao.worlds',
+        name: 'votecust',
+        authorization: [{ actor: userAccount, permission: 'active' }],
+        data: {
+          voter:    userAccount,
+          dac_id:   scope,
+          newvotes: [...selectedVotes[scope]].sort()
+        }
+      };
+
+      let result;
+      if (walletType === 'wcw') {
+        result = await wax.api.transact({ actions: [action] }, { blocksBehind: 3, expireSeconds: 30 });
+      } else {
+        result = await anchorSess.transact({ action });
+      }
+
+      const txId = result?.transaction_id || result?.processed?.id
+                || result?.response?.transaction_id || '?';
+
+      setStatus(statusEl, 'success',
+        `✓ Vote soumis ! TX : <a href="https://waxblock.io/transaction/${txId}" target="_blank" style="color:var(--green)">${String(txId).substring(0,16)}…</a>`
+      );
+      showToast('Vote enregistré sur la blockchain !', 'success');
+    } catch(e) {
+      console.error(e);
+      const msg = e.message || JSON.stringify(e);
+      setStatus(statusEl, 'error', `✕ Erreur : ${msg}`);
+      showToast('Transaction échouée', 'error');
+    } finally {
+      btn.disabled = false;
+      updateVoteButtons();
+    }
+  }
+
+  function setStatus(el, type, html) {
+    el.className = 'tx-status ' + type;
+    el.innerHTML = html;
+  }
+
+  // ── SORT ──
+  function sortTableByRank(scope, toggle = true) {
+    if (toggle) sortOrders[scope] = !sortOrders[scope];
+    candidatesData[scope].sort((a, b) => {
+      return sortOrders[scope]
+        ? Number(a.rank) - Number(b.rank)
+        : Number(b.rank) - Number(a.rank);
+    });
+    renderTable(scope, candidatesData[scope]);
+  }
+
+  document.querySelectorAll('.rankHeader').forEach(th => {
+    th.addEventListener('click', () => sortTableByRank(th.dataset.scope, true));
+  });
+
+  // ── AUTO REFRESH ──
+  function toggleRefresh() {
+    autoRefresh = !autoRefresh;
+    const btn = document.getElementById('refreshToggle');
+    if (autoRefresh) {
+      btn.textContent = '⏱ Auto Refresh: ON';
+      btn.classList.add('on');
+      refreshInterval = setInterval(() => scopes.forEach(loadCandidates), 10000);
+    } else {
+      btn.textContent = '⏹ Auto Refresh: OFF';
+      btn.classList.remove('on');
+      clearInterval(refreshInterval);
+    }
+  }
+  document.getElementById('refreshToggle').addEventListener('click', toggleRefresh);
+
+  // ── TOAST ──
+  let toastTimer = null;
+  function showToast(msg, type = 'info') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show ' + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.className = ''; }, 4000);
+  }
+
+  function init() {
+    scopes.forEach(loadCandidates);
+    if (window.location.protocol === 'file:') {
+      setTimeout(() => showToast('⚠️ Ouvre via http://localhost, pas file://', 'error'), 500);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
+</body>
+</html>
