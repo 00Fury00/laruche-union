@@ -254,34 +254,6 @@ window.__waxClientCache = null;
       transition: all 0.2s;
     }
     .btn-clear:hover { border-color: var(--red); color: var(--red); }
-    .btn-terms {
-      background: transparent;
-      border: 1px solid var(--text-muted);
-      padding: 9px 16px;
-      color: var(--text-muted);
-      font-weight: bold;
-      font-family: 'Courier New', monospace;
-      font-size: 11px;
-      cursor: pointer;
-      border-radius: 4px;
-      letter-spacing: 1px;
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-    .btn-terms:hover:not(:disabled) {
-      border-color: #aaaaff;
-      color: #aaaaff;
-      box-shadow: 0 0 8px rgba(170,170,255,0.2);
-    }
-    .btn-terms:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-    .btn-terms.signed {
-      border-color: var(--green);
-      color: var(--green);
-    }
-
 
     /* ── STATUS ── */
     .tx-status {
@@ -466,6 +438,24 @@ window.__waxClientCache = null;
 
     /* Gold for #1 rank */
     tbody tr:first-child .rank-badge.elected { background: var(--gold); }
+
+    .btn-terms {
+      background: transparent;
+      border: 1px solid var(--text-muted);
+      padding: 9px 16px;
+      color: var(--text-muted);
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-terms:hover:not(:disabled) { border-color: #aaaaff; color: #aaaaff; }
+    .btn-terms:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-terms.signed { border-color: var(--green); color: var(--green); }
   </style>
 </head>
 <body>
@@ -507,8 +497,8 @@ window.__waxClientCache = null;
         <span class="vote-count">(<span id="eyekeunnCount">0</span>/2)</span>
       </div>
       <button class="btn-clear" onclick="clearVotes('eyekeunn')">Effacer</button>
-      <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">✍ TERMES</button>
-      <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">▶ VOTER</button>
+      <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">&#9997; TERMES</button>
+      <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">&#9654; VOTER</button>
     </div>
     <div class="tx-status" id="eyekeunnTermsStatus"></div>
     <div class="tx-status" id="eyekeunnStatus"></div>
@@ -553,8 +543,8 @@ window.__waxClientCache = null;
         <span class="vote-count">(<span id="magorunnCount">0</span>/2)</span>
       </div>
       <button class="btn-clear" onclick="clearVotes('magorunn')">Effacer</button>
-      <button class="btn-terms" id="magorunnTermsBtn" disabled onclick="signTerms('magorunn')">✍ TERMES</button>
-      <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">▶ VOTER</button>
+      <button class="btn-terms" id="magorunnTermsBtn" disabled onclick="signTerms('magorunn')">&#9997; TERMES</button>
+      <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">&#9654; VOTER</button>
     </div>
     <div class="tx-status" id="magorunnTermsStatus"></div>
     <div class="tx-status" id="magorunnStatus"></div>
@@ -599,8 +589,8 @@ window.__waxClientCache = null;
         <span class="vote-count">(<span id="naronunnCount">0</span>/2)</span>
       </div>
       <button class="btn-clear" onclick="clearVotes('naronunn')">Effacer</button>
-      <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">✍ TERMES</button>
-      <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">▶ VOTER</button>
+      <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">&#9997; TERMES</button>
+      <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">&#9654; VOTER</button>
     </div>
     <div class="tx-status" id="naronunnTermsStatus"></div>
     <div class="tx-status" id="naronunnStatus"></div>
@@ -1032,67 +1022,53 @@ window.__waxClientCache = null;
   // ── VOTE BUTTONS STATE ──
   function updateVoteButtons() {
     scopes.forEach(scope => {
-      const voteBtn  = document.getElementById(`${scope}VoteBtn`);
-      const termsBtn = document.getElementById(`${scope}TermsBtn`);
-      if (voteBtn)  voteBtn.disabled  = !userAccount || selectedVotes[scope].length === 0;
-      // Le bouton terms est actif dès qu'un wallet est connecté
-      // (sauf si déjà signé — classe "signed")
-      if (termsBtn && !termsBtn.classList.contains('signed')) {
-        termsBtn.disabled = !userAccount;
-      }
+      const voteBtn  = document.getElementById(scope + "VoteBtn");
+      const termsBtn = document.getElementById(scope + "TermsBtn");
+      if (voteBtn)  voteBtn.disabled = !userAccount || selectedVotes[scope].length === 0;
+      if (termsBtn && !termsBtn.classList.contains("signed")) termsBtn.disabled = !userAccount;
     });
   }
 
 
-  // ── SIGN TERMS (memberreg) ──
-  // contract : token.worlds | action : memberreg
-  // agreedterms = "NA" (valeur confirmée sur velesunn)
+  // ── SIGN TERMS (token.worlds / memberreg) ──
   async function signTerms(scope) {
     if (!userAccount) {
-      showToast('Connecte ton wallet d'abord !', 'error');
+      showToast("Connecte ton wallet d'abord !", "error");
       return;
     }
-
-    const statusEl = document.getElementById(`${scope}TermsStatus`);
-    const btn      = document.getElementById(`${scope}TermsBtn`);
-
-    setStatus(statusEl, 'loading', '⟳ Signature des termes en cours...');
+    const statusEl = document.getElementById(scope + "TermsStatus");
+    const btn      = document.getElementById(scope + "TermsBtn");
+    setStatus(statusEl, "loading", "&#8987; Signature des termes en cours...");
     btn.disabled = true;
-
     try {
       const action = {
-        account: 'token.worlds',
-        name: 'memberreg',
-        authorization: [{ actor: userAccount, permission: 'active' }],
+        account: "token.worlds",
+        name: "memberreg",
+        authorization: [{ actor: userAccount, permission: "active" }],
         data: {
-          sender:       userAccount,
-          agreedterms:  'NA',
-          dac_id:       scope
+          sender:      userAccount,
+          agreedterms: "NA",
+          dac_id:      scope
         }
       };
-
       let result;
-      if (walletType === 'wcw') {
-        if (!wax?.api?.transact) throw new Error('API WCW non disponible, reconnecte-toi.');
+      if (walletType === "wcw") {
+        if (!wax || !wax.api || !wax.api.transact) throw new Error("API WCW non disponible, reconnecte-toi.");
         result = await wax.api.transact({ actions: [action] }, { blocksBehind: 3, expireSeconds: 120 });
       } else {
         result = await anchorSess.transact({ action });
       }
-
-      const txId = result?.transaction_id || result?.processed?.id
-                || result?.response?.transaction_id || '?';
-
-      btn.classList.add('signed');
-      btn.textContent = '✓ SIGNÉ';
-      setStatus(statusEl, 'success',
-        `✓ Termes signés ! TX : <a href="https://waxblock.io/transaction/${txId}" target="_blank" style="color:var(--green)">${String(txId).substring(0,16)}…</a>`
+      const txId = result && (result.transaction_id || (result.processed && result.processed.id) || (result.response && result.response.transaction_id)) || "?";
+      btn.classList.add("signed");
+      btn.textContent = "✓ SIGNE";
+      setStatus(statusEl, "success",
+        "&#10003; Termes sign&#233;s ! TX : <a href=\"https://waxblock.io/transaction/" + txId + "\" target=\"_blank\" style=\"color:var(--green)\">" + String(txId).substring(0,16) + "&#8230;</a>"
       );
-      showToast(`Termes ${scope.toUpperCase()} signés !`, 'success');
+      showToast("Termes " + scope.toUpperCase() + " sign&#233;s !", "success");
     } catch(e) {
       console.error(e);
-      const msg = e.message || JSON.stringify(e);
-      setStatus(statusEl, 'error', `✕ Erreur : ${msg}`);
-      showToast('Signature échouée', 'error');
+      setStatus(statusEl, "error", "&#10005; Erreur : " + (e.message || JSON.stringify(e)));
+      showToast("Signature &#233;chou&#233;e", "error");
       btn.disabled = false;
     }
   }
