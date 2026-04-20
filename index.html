@@ -456,6 +456,117 @@ window.__waxClientCache = null;
     .btn-terms:hover:not(:disabled) { border-color: #aaaaff; color: #aaaaff; }
     .btn-terms:disabled { opacity: 0.35; cursor: not-allowed; }
     .btn-terms.signed { border-color: var(--green); color: var(--green); }
+
+    /* ── TLM STAKE PANEL ── */
+    .stake-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 18px;
+      margin-top: 8px;
+    }
+
+    .stake-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stake-label {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 1px;
+      white-space: nowrap;
+      font-weight: bold;
+    }
+
+    .stake-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+
+    .stake-input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 12px;
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      width: 150px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .stake-input:focus { border-color: var(--gold); }
+    .stake-input::placeholder { color: var(--text-muted); }
+
+    .stake-unit {
+      font-size: 11px;
+      color: var(--gold);
+      opacity: 0.8;
+      font-weight: bold;
+    }
+
+    .btn-stake {
+      background: transparent;
+      border: 1px solid var(--gold);
+      padding: 9px 18px;
+      color: var(--gold);
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .btn-stake:hover:not(:disabled) { background: rgba(255,215,0,0.12); }
+    .btn-stake:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .stake-info {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .stake-info span { color: var(--gold); }
+
+    /* Steps progress */
+    .stake-steps {
+      display: none;
+      margin-top: 14px;
+      gap: 6px;
+      flex-direction: column;
+    }
+    .stake-steps.visible { display: flex; }
+
+    .stake-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      font-size: 11px;
+      transition: all 0.3s;
+    }
+    .stake-step.pending  { opacity: 0.4; }
+    .stake-step.active   { border-color: var(--gold); opacity: 1; }
+    .stake-step.done     { border-color: var(--green); background: rgba(0,255,136,0.05); opacity: 1; }
+    .stake-step.error    { border-color: var(--red); background: rgba(255,68,68,0.07); opacity: 1; }
+
+    .step-icon { font-size: 13px; min-width: 18px; text-align: center; margin-top: 1px; }
+    .step-body { flex: 1; }
+    .step-title { color: var(--text); font-weight: bold; letter-spacing: 0.5px; }
+    .step-desc  { color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+    .step-tx    { margin-top: 4px; }
+    .step-tx a  { color: var(--green); text-decoration: none; font-size: 10px; }
+    .step-tx a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -503,6 +614,45 @@ window.__waxClientCache = null;
     <div class="tx-status" id="eyekeunnTermsStatus"></div>
     <div class="tx-status" id="eyekeunnStatus"></div>
 
+    <!-- TLM STAKE -->
+    <div class="stake-panel">
+      <div class="stake-top">
+        <span class="stake-label">⬡ STAKER TLM → EYEUNN</span>
+        <div class="stake-input-wrap">
+          <input type="number" class="stake-input" id="eyekeunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+          <span class="stake-unit">TLM</span>
+          <span class="stake-info">Mon stake : <span id="eyekeunnMyStake">–</span></span>
+        </div>
+        <button class="btn-stake" id="eyekeunnStakeBtn" disabled onclick="submitStake('eyekeunn')">▲ STAKER</button>
+      </div>
+      <div class="stake-steps" id="eyekeunnStakeSteps">
+        <div class="stake-step pending" id="eyekeunn-step-1">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX1 — alien.worlds::transfer</div>
+            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
+            <div class="step-tx" id="eyekeunn-tx-1"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="eyekeunn-step-2">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX2 — stake.worlds::stake</div>
+            <div class="step-desc">Conversion TLM → EYEUNN (planet_name: eyekeunn)</div>
+            <div class="step-tx" id="eyekeunn-tx-2"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="eyekeunn-step-3">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX3 — token.worlds::stake</div>
+            <div class="step-desc">Stake des EYEUNN → augmentation du Vote Power</div>
+            <div class="step-tx" id="eyekeunn-tx-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="table-wrap">
       <table id="eyekeunnTable">
         <thead>
@@ -549,6 +699,45 @@ window.__waxClientCache = null;
     <div class="tx-status" id="magorunnTermsStatus"></div>
     <div class="tx-status" id="magorunnStatus"></div>
 
+    <!-- TLM STAKE -->
+    <div class="stake-panel">
+      <div class="stake-top">
+        <span class="stake-label">⬡ STAKER TLM → MAGUNN</span>
+        <div class="stake-input-wrap">
+          <input type="number" class="stake-input" id="magorunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+          <span class="stake-unit">TLM</span>
+          <span class="stake-info">Mon stake : <span id="magorunnMyStake">–</span></span>
+        </div>
+        <button class="btn-stake" id="magorunnStakeBtn" disabled onclick="submitStake('magorunn')">▲ STAKER</button>
+      </div>
+      <div class="stake-steps" id="magorunnStakeSteps">
+        <div class="stake-step pending" id="magorunn-step-1">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX1 — alien.worlds::transfer</div>
+            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
+            <div class="step-tx" id="magorunn-tx-1"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="magorunn-step-2">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX2 — stake.worlds::stake</div>
+            <div class="step-desc">Conversion TLM → MAGUNN (planet_name: magorunn)</div>
+            <div class="step-tx" id="magorunn-tx-2"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="magorunn-step-3">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX3 — token.worlds::stake</div>
+            <div class="step-desc">Stake des MAGUNN → augmentation du Vote Power</div>
+            <div class="step-tx" id="magorunn-tx-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="table-wrap">
       <table id="magorunnTable">
         <thead>
@@ -594,6 +783,45 @@ window.__waxClientCache = null;
     </div>
     <div class="tx-status" id="naronunnTermsStatus"></div>
     <div class="tx-status" id="naronunnStatus"></div>
+
+    <!-- TLM STAKE -->
+    <div class="stake-panel">
+      <div class="stake-top">
+        <span class="stake-label">⬡ STAKER TLM → NARUNN</span>
+        <div class="stake-input-wrap">
+          <input type="number" class="stake-input" id="naronunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+          <span class="stake-unit">TLM</span>
+          <span class="stake-info">Mon stake : <span id="naronunnMyStake">–</span></span>
+        </div>
+        <button class="btn-stake" id="naronunnStakeBtn" disabled onclick="submitStake('naronunn')">▲ STAKER</button>
+      </div>
+      <div class="stake-steps" id="naronunnStakeSteps">
+        <div class="stake-step pending" id="naronunn-step-1">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX1 — alien.worlds::transfer</div>
+            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
+            <div class="step-tx" id="naronunn-tx-1"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="naronunn-step-2">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX2 — stake.worlds::stake</div>
+            <div class="step-desc">Conversion TLM → NARUNN (planet_name: naronunn)</div>
+            <div class="step-tx" id="naronunn-tx-2"></div>
+          </div>
+        </div>
+        <div class="stake-step pending" id="naronunn-step-3">
+          <span class="step-icon">⬜</span>
+          <div class="step-body">
+            <div class="step-title">TX3 — token.worlds::stake</div>
+            <div class="step-desc">Stake des NARUNN → augmentation du Vote Power</div>
+            <div class="step-tx" id="naronunn-tx-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="table-wrap">
       <table id="naronunnTable">
@@ -662,6 +890,7 @@ window.__waxClientCache = null;
     badge.className     = 'wallet-badge ' + type;
     badge.style.display = '';
     updateVoteButtons();
+    scopes.forEach(s => fetchMyStake(s));
   }
 
   function resetWalletUI() {
@@ -1024,8 +1253,10 @@ window.__waxClientCache = null;
     scopes.forEach(scope => {
       const voteBtn  = document.getElementById(scope + "VoteBtn");
       const termsBtn = document.getElementById(scope + "TermsBtn");
+      const stakeBtn = document.getElementById(scope + "StakeBtn");
       if (voteBtn)  voteBtn.disabled = !userAccount || selectedVotes[scope].length === 0;
       if (termsBtn && !termsBtn.classList.contains("signed")) termsBtn.disabled = !userAccount;
+      if (stakeBtn) stakeBtn.disabled = !userAccount;
     });
   }
 
@@ -1126,6 +1357,145 @@ window.__waxClientCache = null;
     } finally {
       btn.disabled = false;
       updateVoteButtons();
+    }
+  }
+
+  // ── STAKE TLM (3 transactions séquentielles) ──
+  const PLANET_TOKEN = {
+    eyekeunn: 'EYEUNN',
+    magorunn: 'MAGUNN',
+    naronunn: 'NARUNN'
+  };
+
+  function setStepState(scope, stepNum, state, txId) {
+    const el = document.getElementById(scope + '-step-' + stepNum);
+    if (!el) return;
+    el.className = 'stake-step ' + state;
+    const icons = { pending: '⬜', active: '⏳', done: '✅', error: '❌' };
+    el.querySelector('.step-icon').textContent = icons[state];
+    if (txId) {
+      const txEl = document.getElementById(scope + '-tx-' + stepNum);
+      if (txEl) txEl.innerHTML = 'TX : <a href="https://waxblock.io/transaction/' + txId + '" target="_blank">' + String(txId).substring(0, 20) + '…</a>';
+    }
+  }
+
+  async function doTransact(action) {
+    if (walletType === 'wcw') {
+      if (!wax?.api?.transact) throw new Error('API WCW non disponible, reconnecte-toi.');
+      return await wax.api.transact({ actions: [action] }, { blocksBehind: 3, expireSeconds: 120 });
+    } else {
+      return await anchorSess.transact({ action });
+    }
+  }
+
+  function extractTxId(result) {
+    return result?.transaction_id || result?.processed?.id || result?.response?.transaction_id || '?';
+  }
+
+  async function submitStake(scope) {
+    if (!userAccount) { showToast("Connecte ton wallet d'abord !", 'error'); return; }
+
+    const amountInput = document.getElementById(scope + 'StakeAmount');
+    const rawAmount   = parseFloat(amountInput.value);
+    if (!rawAmount || rawAmount <= 0) {
+      showToast('Saisis un montant TLM valide', 'error');
+      amountInput.focus();
+      return;
+    }
+
+    const token     = PLANET_TOKEN[scope];
+    const tlmQty    = rawAmount.toFixed(4) + ' TLM';
+    const planetQty = rawAmount.toFixed(4) + ' ' + token;
+    const stepsEl   = document.getElementById(scope + 'StakeSteps');
+    const btn       = document.getElementById(scope + 'StakeBtn');
+
+    stepsEl.classList.add('visible');
+    [1,2,3].forEach(n => { setStepState(scope, n, 'pending', null); const t = document.getElementById(scope+'-tx-'+n); if(t) t.innerHTML=''; });
+    btn.disabled = true;
+
+    // ── TX 1 : alien.worlds::transfer → stake.worlds (memo: staking) ──
+    setStepState(scope, 1, 'active', null);
+    try {
+      const res1 = await doTransact({
+        account: 'alien.worlds',
+        name: 'transfer',
+        authorization: [{ actor: userAccount, permission: 'active' }],
+        data: { from: userAccount, to: 'stake.worlds', quantity: tlmQty, memo: 'staking' }
+      });
+      setStepState(scope, 1, 'done', extractTxId(res1));
+      showToast('TX1 ✅ TLM envoyés à stake.worlds', 'success');
+    } catch(e) {
+      setStepState(scope, 1, 'error', null);
+      showToast('TX1 ❌ ' + (e.message || e), 'error');
+      btn.disabled = false;
+      return;
+    }
+
+    // ── TX 2 : stake.worlds::stake ──
+    setStepState(scope, 2, 'active', null);
+    try {
+      const res2 = await doTransact({
+        account: 'stake.worlds',
+        name: 'stake',
+        authorization: [{ actor: userAccount, permission: 'active' }],
+        data: { account: userAccount, planet_name: scope, quantity: tlmQty }
+      });
+      setStepState(scope, 2, 'done', extractTxId(res2));
+      showToast('TX2 ✅ stake.worlds::stake OK', 'success');
+    } catch(e) {
+      setStepState(scope, 2, 'error', null);
+      showToast('TX2 ❌ ' + (e.message || e), 'error');
+      btn.disabled = false;
+      return;
+    }
+
+    // ── TX 3 : token.worlds::stake ──
+    setStepState(scope, 3, 'active', null);
+    try {
+      const res3 = await doTransact({
+        account: 'token.worlds',
+        name: 'stake',
+        authorization: [{ actor: userAccount, permission: 'active' }],
+        data: { account: userAccount, quantity: planetQty }
+      });
+      setStepState(scope, 3, 'done', extractTxId(res3));
+      showToast('✅ ' + planetQty + ' stakés ! Vote Power augmenté sur ' + scope.toUpperCase(), 'success');
+      amountInput.value = '';
+      setTimeout(() => { fetchMyStake(scope); loadCandidates(scope); }, 4000);
+    } catch(e) {
+      setStepState(scope, 3, 'error', null);
+      showToast('TX3 ❌ ' + (e.message || e), 'error');
+    }
+
+    btn.disabled = !userAccount;
+  }
+
+  // ── CHARGER LE STAKE PERSO ──
+  async function fetchMyStake(scope) {
+    if (!userAccount) return;
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + '/v1/chain/get_table_rows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            json: true,
+            code: 'token.worlds',
+            scope: scope,
+            table: 'stakes',
+            lower_bound: userAccount,
+            upper_bound: userAccount,
+            limit: 1
+          })
+        });
+        const data = await res.json();
+        const row  = data?.rows?.[0];
+        const el   = document.getElementById(scope + 'MyStake');
+        if (el) el.textContent = row ? row.stake : '0.0000 ' + (PLANET_TOKEN[scope] || 'TLM');
+        return;
+      } catch(e) {
+        console.warn('[myStake:' + scope + '] Échec ' + endpoint + ':', e.message);
+      }
     }
   }
 
