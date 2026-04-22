@@ -567,6 +567,40 @@ window.__waxClientCache = null;
     .step-tx    { margin-top: 4px; }
     .step-tx a  { color: var(--green); text-decoration: none; font-size: 10px; }
     .step-tx a:hover { text-decoration: underline; }
+
+    /* ── ELECTION COUNTDOWN ── */
+    .election-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .election-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .election-countdown {
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--green);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .election-countdown.soon { color: var(--gold); }
+    .election-countdown.imminent { color: var(--red); animation: pulse 1s infinite; }
+    .election-date {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
   </style>
 </head>
 <body>
@@ -596,6 +630,12 @@ window.__waxClientCache = null;
         EYEKEUNN
         <span class="elected-badge">TOP 5 ÉLUS</span>
       </div>
+    </div>
+
+    <div class="election-bar">
+      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+      <span class="election-countdown" id="eyekeunnCountdown">–</span>
+      <span class="election-date" id="eyekeunnElectionDate"></span>
     </div>
 
     <div class="vote-panel" id="eyekeunnVotePanel">
@@ -683,6 +723,12 @@ window.__waxClientCache = null;
       </div>
     </div>
 
+    <div class="election-bar">
+      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+      <span class="election-countdown" id="magorunnCountdown">–</span>
+      <span class="election-date" id="magorunnElectionDate"></span>
+    </div>
+
     <div class="vote-panel" id="magorunnVotePanel">
       <div class="vote-selection">
         <span class="vote-label">VOTES :</span>
@@ -766,6 +812,12 @@ window.__waxClientCache = null;
         NARONUNN
         <span class="elected-badge">TOP 5 ÉLUS</span>
       </div>
+    </div>
+
+    <div class="election-bar">
+      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+      <span class="election-countdown" id="naronunnCountdown">–</span>
+      <span class="election-date" id="naronunnElectionDate"></span>
     </div>
 
     <div class="vote-panel" id="narorunnVotePanel">
@@ -1545,8 +1597,104 @@ window.__waxClientCache = null;
     toastTimer = setTimeout(() => { t.className = ''; }, 4000);
   }
 
+  // ── ELECTION COUNTDOWN ──
+  async function loadElectionDate(scope) {
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + '/v1/chain/get_table_rows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            json: true,
+            code: 'dao.worlds',
+            scope: scope,
+            table: 'dacglobals',
+            limit: 50
+          })
+        });
+        const data = await res.json();
+        if (!data.rows || !data.rows.length) throw new Error('Pas de rows');
+
+        const row = data.rows[0];
+        if (typeof row !== 'object' || Array.isArray(row)) throw new Error('Format inattendu');
+
+        let lastperiodtime = null;
+        let periodlength   = null;
+
+        // Cas 1 : objet plat { lastperiodtime: "...", periodlength: 15552000 }
+        if (row.lastperiodtime !== undefined) {
+          lastperiodtime = Array.isArray(row.lastperiodtime) ? row.lastperiodtime[1] : row.lastperiodtime;
+          periodlength   = Array.isArray(row.periodlength)   ? parseInt(row.periodlength[1]) : parseInt(row.periodlength);
+        }
+        // Cas 2 : objet avec une propriété contenant un tableau de {key,value}
+        else {
+          const firstVal = Object.values(row)[0];
+          const pairs = Array.isArray(firstVal) ? firstVal : null;
+          if (pairs) {
+            pairs.forEach(pair => {
+              if (!pair || !pair.key) return;
+              if (pair.key === 'lastperiodtime') lastperiodtime = Array.isArray(pair.value) ? pair.value[1] : pair.value;
+              if (pair.key === 'periodlength')   periodlength   = Array.isArray(pair.value) ? parseInt(pair.value[1]) : parseInt(pair.value);
+            });
+          }
+        }
+
+        if (!lastperiodtime || !periodlength) throw new Error('Champs manquants');
+
+        const nextElection = new Date(lastperiodtime + 'Z');
+        nextElection.setSeconds(nextElection.getSeconds() + periodlength);
+        startCountdown(scope, nextElection);
+        return;
+      } catch(e) {
+        console.warn('[election:' + scope + '] ' + endpoint + ' :', e.message);
+      }
+    }
+    const cdEl = document.getElementById(scope + 'Countdown');
+    if (cdEl) { cdEl.textContent = 'Indisponible'; cdEl.style.color = 'var(--text-muted)'; }
+  }
+
+  function startCountdown(scope, targetDate) {
+    const cdEl   = document.getElementById(scope + 'Countdown');
+    const dateEl = document.getElementById(scope + 'ElectionDate');
+    if (!cdEl) return;
+
+    const fmt = targetDate.toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'long', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', timeZone: 'UTC'
+    }) + ' UTC';
+    if (dateEl) dateEl.textContent = fmt;
+
+    function tick() {
+      const now  = Date.now();
+      const diff = targetDate.getTime() - now;
+
+      if (diff <= 0) {
+        cdEl.textContent = '⚡ ÉLECTION EN COURS';
+        cdEl.className = 'election-countdown imminent';
+        return;
+      }
+
+      const days    = Math.floor(diff / 86400000);
+      const hours   = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000) / 60000);
+      const seconds = Math.floor((diff % 60000) / 1000);
+
+      cdEl.textContent = days + 'j ' + String(hours).padStart(2,'0') + 'h '
+                       + String(minutes).padStart(2,'0') + 'm '
+                       + String(seconds).padStart(2,'0') + 's';
+
+      if (days < 7)       cdEl.className = 'election-countdown imminent';
+      else if (days < 30) cdEl.className = 'election-countdown soon';
+      else                cdEl.className = 'election-countdown';
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  }
+
   function init() {
     scopes.forEach(loadCandidates);
+    scopes.forEach(loadElectionDate);
     if (window.location.protocol === 'file:') {
       setTimeout(() => showToast('⚠️ Ouvre via http://localhost, pas file://', 'error'), 500);
     }
@@ -1560,4 +1708,3 @@ window.__waxClientCache = null;
 </script>
 </body>
 </html>
-
