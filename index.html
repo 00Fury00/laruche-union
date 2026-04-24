@@ -2,8 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAO Candidats - EYEKEUNN & MAGORUNN</title>
+  <title>🐝DAO PLANETES🐝</title>
 <!-- WaxJS : fichier local uniquement (même logique que Planetary Defense) -->
 <script>
 window.__waxjsLoadError = false;
@@ -568,6 +569,33 @@ window.__waxClientCache = null;
     .step-tx a  { color: var(--green); text-decoration: none; font-size: 10px; }
     .step-tx a:hover { text-decoration: underline; }
 
+    /* ── DECAY BAR ── */
+    .decay-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 90px;
+    }
+    .decay-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      min-width: 50px;
+    }
+    .decay-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+    .decay-pct {
+      font-size: 10px;
+      white-space: nowrap;
+      min-width: 34px;
+      text-align: right;
+    }
+
     /* ── ELECTION COUNTDOWN ── */
     .election-bar {
       background: var(--surface);
@@ -601,12 +629,83 @@ window.__waxClientCache = null;
       white-space: nowrap;
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+
+    /* ── MAIN TABS (UNION / SYNDICATE) ── */
+    .main-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 57px;
+      z-index: 90;
+    }
+    .main-tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 10px 32px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 2px;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+    .main-tab-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .main-tab-btn.active {
+      color: var(--green);
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    /* ── SUB-TABS (planètes) ── */
+    .sub-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 24px 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .sub-tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-bottom: none;
+      padding: 8px 18px;
+      color: var(--text-muted);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 4px 4px 0 0;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      position: relative;
+      bottom: -1px;
+    }
+    .sub-tab-btn:hover { color: var(--text); border-color: var(--border); }
+    .sub-tab-btn.active {
+      color: var(--green);
+      border-color: var(--border);
+      border-bottom-color: var(--bg);
+      background: var(--bg);
+    }
+
+    .main-panel { display: none; }
+    .main-panel.active { display: block; }
+    .sub-panel { display: none; }
+    .sub-panel.active { display: block; }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>⬡ DAO Candidats</h1>
+  <h1>🐝 DAO PLANETES 🐝</h1>
   <div class="header-controls">
     <button id="refreshToggle">⏹ Auto Refresh: OFF</button>
     <div id="wallet-status-bar" style="display:flex;align-items:center;gap:8px;font-size:11px;">
@@ -621,283 +720,559 @@ window.__waxClientCache = null;
   </div>
 </div>
 
-<div class="main">
-
-  <!-- EYEKEUNN -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">
-        EYEKEUNN
-        <span class="elected-badge">TOP 5 ÉLUS</span>
-      </div>
-    </div>
-
-    <div class="election-bar">
-      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
-      <span class="election-countdown" id="eyekeunnCountdown">–</span>
-      <span class="election-date" id="eyekeunnElectionDate"></span>
-    </div>
-
-    <div class="vote-panel" id="eyekeunnVotePanel">
-      <div class="vote-selection">
-        <span class="vote-label">VOTES :</span>
-        <div class="vote-slots" id="eyekeunnSlots">
-          <div class="vote-slot" id="eyekeunn-slot-0">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="0">✕</button></div>
-          <div class="vote-slot" id="eyekeunn-slot-1">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="1">✕</button></div>
-        </div>
-        <span class="vote-count">(<span id="eyekeunnCount">0</span>/2)</span>
-      </div>
-      <button class="btn-clear" onclick="clearVotes('eyekeunn')">Effacer</button>
-      <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">&#9997; TERMES</button>
-      <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">&#9654; VOTER</button>
-    </div>
-    <div class="tx-status" id="eyekeunnTermsStatus"></div>
-    <div class="tx-status" id="eyekeunnStatus"></div>
-
-    <!-- TLM STAKE -->
-    <div class="stake-panel">
-      <div class="stake-top">
-        <span class="stake-label">⬡ STAKER TLM → EYEUNN</span>
-        <div class="stake-input-wrap">
-          <input type="number" class="stake-input" id="eyekeunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
-          <span class="stake-unit">TLM</span>
-          <span class="stake-info">Mon stake : <span id="eyekeunnMyStake">–</span></span>
-        </div>
-        <button class="btn-stake" id="eyekeunnStakeBtn" disabled onclick="submitStake('eyekeunn')">▲ STAKER</button>
-      </div>
-      <div class="stake-steps" id="eyekeunnStakeSteps">
-        <div class="stake-step pending" id="eyekeunn-step-1">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX1 — alien.worlds::transfer</div>
-            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
-            <div class="step-tx" id="eyekeunn-tx-1"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="eyekeunn-step-2">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX2 — stake.worlds::stake</div>
-            <div class="step-desc">Conversion TLM → EYEUNN (planet_name: eyekeunn)</div>
-            <div class="step-tx" id="eyekeunn-tx-2"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="eyekeunn-step-3">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX3 — token.worlds::stake</div>
-            <div class="step-desc">Stake des EYEUNN → augmentation du Vote Power</div>
-            <div class="step-tx" id="eyekeunn-tx-3"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <table id="eyekeunnTable">
-        <thead>
-          <tr>
-            <th class="check-col">✓</th>
-            <th>#</th>
-            <th>Candidat</th>
-            <th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th>
-            <th>Vote Power</th>
-            <th>Actif</th>
-            <th>Votants</th>
-            <th>Dernier vote reçu</th>
-            <th>Votants récents</th>
-            <th>TLM STACK</th>
-          </tr>
-        </thead>
-        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- MAGORUNN -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">
-        MAGORUNN
-        <span class="elected-badge">TOP 5 ÉLUS</span>
-      </div>
-    </div>
-
-    <div class="election-bar">
-      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
-      <span class="election-countdown" id="magorunnCountdown">–</span>
-      <span class="election-date" id="magorunnElectionDate"></span>
-    </div>
-
-    <div class="vote-panel" id="magorunnVotePanel">
-      <div class="vote-selection">
-        <span class="vote-label">VOTES :</span>
-        <div class="vote-slots" id="magorunnSlots">
-          <div class="vote-slot" id="magorunn-slot-0">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="0">✕</button></div>
-          <div class="vote-slot" id="magorunn-slot-1">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="1">✕</button></div>
-        </div>
-        <span class="vote-count">(<span id="magorunnCount">0</span>/2)</span>
-      </div>
-      <button class="btn-clear" onclick="clearVotes('magorunn')">Effacer</button>
-      <button class="btn-terms" id="magorunnTermsBtn" disabled onclick="signTerms('magorunn')">&#9997; TERMES</button>
-      <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">&#9654; VOTER</button>
-    </div>
-    <div class="tx-status" id="magorunnTermsStatus"></div>
-    <div class="tx-status" id="magorunnStatus"></div>
-
-    <!-- TLM STAKE -->
-    <div class="stake-panel">
-      <div class="stake-top">
-        <span class="stake-label">⬡ STAKER TLM → MAGUNN</span>
-        <div class="stake-input-wrap">
-          <input type="number" class="stake-input" id="magorunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
-          <span class="stake-unit">TLM</span>
-          <span class="stake-info">Mon stake : <span id="magorunnMyStake">–</span></span>
-        </div>
-        <button class="btn-stake" id="magorunnStakeBtn" disabled onclick="submitStake('magorunn')">▲ STAKER</button>
-      </div>
-      <div class="stake-steps" id="magorunnStakeSteps">
-        <div class="stake-step pending" id="magorunn-step-1">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX1 — alien.worlds::transfer</div>
-            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
-            <div class="step-tx" id="magorunn-tx-1"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="magorunn-step-2">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX2 — stake.worlds::stake</div>
-            <div class="step-desc">Conversion TLM → MAGUNN (planet_name: magorunn)</div>
-            <div class="step-tx" id="magorunn-tx-2"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="magorunn-step-3">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX3 — token.worlds::stake</div>
-            <div class="step-desc">Stake des MAGUNN → augmentation du Vote Power</div>
-            <div class="step-tx" id="magorunn-tx-3"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <table id="magorunnTable">
-        <thead>
-          <tr>
-            <th class="check-col">✓</th>
-            <th>#</th>
-            <th>Candidat</th>
-            <th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th>
-            <th>Vote Power</th>
-            <th>Actif</th>
-            <th>Votants</th>
-            <th>Dernier vote reçu</th>
-            <th>Votants récents</th>
-            <th>TLM STACK</th>
-          </tr>
-        </thead>
-        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- NARONUNN -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-title">
-        NARONUNN
-        <span class="elected-badge">TOP 5 ÉLUS</span>
-      </div>
-    </div>
-
-    <div class="election-bar">
-      <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
-      <span class="election-countdown" id="naronunnCountdown">–</span>
-      <span class="election-date" id="naronunnElectionDate"></span>
-    </div>
-
-    <div class="vote-panel" id="narorunnVotePanel">
-      <div class="vote-selection">
-        <span class="vote-label">VOTES :</span>
-        <div class="vote-slots" id="naronunnSlots">
-          <div class="vote-slot" id="naronunn-slot-0">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="0">✕</button></div>
-          <div class="vote-slot" id="naronunn-slot-1">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="1">✕</button></div>
-        </div>
-        <span class="vote-count">(<span id="naronunnCount">0</span>/2)</span>
-      </div>
-      <button class="btn-clear" onclick="clearVotes('naronunn')">Effacer</button>
-      <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">&#9997; TERMES</button>
-      <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">&#9654; VOTER</button>
-    </div>
-    <div class="tx-status" id="naronunnTermsStatus"></div>
-    <div class="tx-status" id="naronunnStatus"></div>
-
-    <!-- TLM STAKE -->
-    <div class="stake-panel">
-      <div class="stake-top">
-        <span class="stake-label">⬡ STAKER TLM → NARUNN</span>
-        <div class="stake-input-wrap">
-          <input type="number" class="stake-input" id="naronunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
-          <span class="stake-unit">TLM</span>
-          <span class="stake-info">Mon stake : <span id="naronunnMyStake">–</span></span>
-        </div>
-        <button class="btn-stake" id="naronunnStakeBtn" disabled onclick="submitStake('naronunn')">▲ STAKER</button>
-      </div>
-      <div class="stake-steps" id="naronunnStakeSteps">
-        <div class="stake-step pending" id="naronunn-step-1">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX1 — alien.worlds::transfer</div>
-            <div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div>
-            <div class="step-tx" id="naronunn-tx-1"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="naronunn-step-2">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX2 — stake.worlds::stake</div>
-            <div class="step-desc">Conversion TLM → NARUNN (planet_name: naronunn)</div>
-            <div class="step-tx" id="naronunn-tx-2"></div>
-          </div>
-        </div>
-        <div class="stake-step pending" id="naronunn-step-3">
-          <span class="step-icon">⬜</span>
-          <div class="step-body">
-            <div class="step-title">TX3 — token.worlds::stake</div>
-            <div class="step-desc">Stake des NARUNN → augmentation du Vote Power</div>
-            <div class="step-tx" id="naronunn-tx-3"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="table-wrap">
-      <table id="naronunnTable">
-        <thead>
-          <tr>
-            <th class="check-col">✓</th>
-            <th>#</th>
-            <th>Candidat</th>
-            <th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th>
-            <th>Vote Power</th>
-            <th>Actif</th>
-            <th>Votants</th>
-            <th>Dernier vote reçu</th>
-            <th>Votants récents</th>
-            <th>TLM STACK</th>
-          </tr>
-        </thead>
-        <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
+<div class="main-tabs">
+  <button class="main-tab-btn active" onclick="switchMain('union')">🌑 UNION</button>
+  <button class="main-tab-btn" onclick="switchMain('dao')">🌕 SYNDICATES</button>
 </div>
 
+<div class="main">
+
+  <!-- ══════════ PANNEAU UNION ══════════ -->
+  <div class="main-panel active" id="main-union">
+    <div class="sub-tabs" id="union-sub-tabs">
+      <button class="sub-tab-btn active" onclick="switchSub('union','eyekeunn')">EYEKEUNN</button>
+      <button class="sub-tab-btn" onclick="switchSub('union','magorunn')">MAGORUNN</button>
+      <button class="sub-tab-btn" onclick="switchSub('union','naronunn')">NARONUNN</button>
+      <button class="sub-tab-btn" onclick="switchSub('union','kavianunn')">KAVIANUNN</button>
+      <button class="sub-tab-btn" onclick="switchSub('union','neriunn')">NERIUNN</button>
+      <button class="sub-tab-btn" onclick="switchSub('union','velesunn')">VELESUNN</button>
+    </div>
+
+    <!-- EYEKEUNN -->
+    <div class="sub-panel active" id="sub-union-eyekeunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">EYEKEUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="eyekeunnCountdown">–</span>
+          <span class="election-date" id="eyekeunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="eyekeunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="eyekeunnSlots">
+              <div class="vote-slot" id="eyekeunn-slot-0">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="eyekeunn-slot-1">— vide —<button class="remove-vote" data-scope="eyekeunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="eyekeunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('eyekeunn')">Effacer</button>
+          <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="eyekeunnTermsStatus"></div>
+        <div class="tx-status" id="eyekeunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → EYEUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="eyekeunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="eyekeunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="eyekeunnStakeBtn" disabled onclick="submitStake('eyekeunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="eyekeunnStakeSteps">
+            <div class="stake-step pending" id="eyekeunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="eyekeunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="eyekeunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → EYEUNN (planet_name: eyekeunn)</div><div class="step-tx" id="eyekeunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="eyekeunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des EYEUNN → augmentation du Vote Power</div><div class="step-tx" id="eyekeunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="eyekeunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAGORUNN -->
+    <div class="sub-panel" id="sub-union-magorunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">MAGORUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="magorunnCountdown">–</span>
+          <span class="election-date" id="magorunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="magorunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="magorunnSlots">
+              <div class="vote-slot" id="magorunn-slot-0">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="magorunn-slot-1">— vide —<button class="remove-vote" data-scope="magorunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="magorunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('magorunn')">Effacer</button>
+          <button class="btn-terms" id="magorunnTermsBtn" disabled onclick="signTerms('magorunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="magorunnTermsStatus"></div>
+        <div class="tx-status" id="magorunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → MAGUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="magorunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="magorunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="magorunnStakeBtn" disabled onclick="submitStake('magorunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="magorunnStakeSteps">
+            <div class="stake-step pending" id="magorunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="magorunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="magorunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → MAGUNN (planet_name: magorunn)</div><div class="step-tx" id="magorunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="magorunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des MAGUNN → augmentation du Vote Power</div><div class="step-tx" id="magorunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="magorunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- NARONUNN -->
+    <div class="sub-panel" id="sub-union-naronunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">NARONUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="naronunnCountdown">–</span>
+          <span class="election-date" id="naronunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="narorunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="naronunnSlots">
+              <div class="vote-slot" id="naronunn-slot-0">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="naronunn-slot-1">— vide —<button class="remove-vote" data-scope="naronunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="naronunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('naronunn')">Effacer</button>
+          <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="naronunnTermsStatus"></div>
+        <div class="tx-status" id="naronunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → NARUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="naronunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="naronunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="naronunnStakeBtn" disabled onclick="submitStake('naronunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="naronunnStakeSteps">
+            <div class="stake-step pending" id="naronunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="naronunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="naronunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → NARUNN (planet_name: naronunn)</div><div class="step-tx" id="naronunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="naronunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NARUNN → augmentation du Vote Power</div><div class="step-tx" id="naronunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="naronunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- KAVIANUNN -->
+    <div class="sub-panel" id="sub-union-kavianunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">KAVIANUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="kavianunnCountdown">–</span>
+          <span class="election-date" id="kavianunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="kavianunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="kavianunnSlots">
+              <div class="vote-slot" id="kavianunn-slot-0">— vide —<button class="remove-vote" data-scope="kavianunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="kavianunn-slot-1">— vide —<button class="remove-vote" data-scope="kavianunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="kavianunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('kavianunn')">Effacer</button>
+          <button class="btn-terms" id="kavianunnTermsBtn" disabled onclick="signTerms('kavianunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="kavianunnVoteBtn" disabled onclick="submitVote('kavianunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="kavianunnTermsStatus"></div>
+        <div class="tx-status" id="kavianunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → KAVUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="kavianunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="kavianunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="kavianunnStakeBtn" disabled onclick="submitStake('kavianunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="kavianunnStakeSteps">
+            <div class="stake-step pending" id="kavianunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="kavianunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="kavianunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → KAVUNN (planet_name: kavianunn)</div><div class="step-tx" id="kavianunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="kavianunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des KAVUNN → augmentation du Vote Power</div><div class="step-tx" id="kavianunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="kavianunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavianunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- NERIUNN -->
+    <div class="sub-panel" id="sub-union-neriunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">NERIUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="neriunnCountdown">–</span>
+          <span class="election-date" id="neriunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="neriunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="neriunnSlots">
+              <div class="vote-slot" id="neriunn-slot-0">— vide —<button class="remove-vote" data-scope="neriunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="neriunn-slot-1">— vide —<button class="remove-vote" data-scope="neriunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="neriunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('neriunn')">Effacer</button>
+          <button class="btn-terms" id="neriunnTermsBtn" disabled onclick="signTerms('neriunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="neriunnVoteBtn" disabled onclick="submitVote('neriunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="neriunnTermsStatus"></div>
+        <div class="tx-status" id="neriunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → NERUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="neriunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="neriunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="neriunnStakeBtn" disabled onclick="submitStake('neriunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="neriunnStakeSteps">
+            <div class="stake-step pending" id="neriunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="neriunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="neriunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → NERUNN (planet_name: neriunn)</div><div class="step-tx" id="neriunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="neriunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NERUNN → augmentation du Vote Power</div><div class="step-tx" id="neriunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="neriunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="neriunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- VELESUNN -->
+    <div class="sub-panel" id="sub-union-velesunn">
+      <div class="section">
+        <div class="section-header"><div class="section-title">VELESUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar">
+          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-countdown" id="velesunnCountdown">–</span>
+          <span class="election-date" id="velesunnElectionDate"></span>
+        </div>
+        <div class="vote-panel" id="velesunnVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="velesunnSlots">
+              <div class="vote-slot" id="velesunn-slot-0">— vide —<button class="remove-vote" data-scope="velesunn" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="velesunn-slot-1">— vide —<button class="remove-vote" data-scope="velesunn" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="velesunnCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('velesunn')">Effacer</button>
+          <button class="btn-terms" id="velesunnTermsBtn" disabled onclick="signTerms('velesunn')">&#9997; TERMES</button>
+          <button class="btn-vote" id="velesunnVoteBtn" disabled onclick="submitVote('velesunn')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="velesunnTermsStatus"></div>
+        <div class="tx-status" id="velesunnStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → VELUNN</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="velesunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="velesunnMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="velesunnStakeBtn" disabled onclick="submitStake('velesunn')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="velesunnStakeSteps">
+            <div class="stake-step pending" id="velesunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="velesunn-tx-1"></div></div></div>
+            <div class="stake-step pending" id="velesunn-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → VELUNN (planet_name: velesunn)</div><div class="step-tx" id="velesunn-tx-2"></div></div></div>
+            <div class="stake-step pending" id="velesunn-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des VELUNN → augmentation du Vote Power</div><div class="step-tx" id="velesunn-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="velesunnTable">
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="velesunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div><!-- /main-union -->
+
+  <!-- ══════════ PANNEAU DAO ══════════ -->
+  <div class="main-panel" id="main-dao">
+    <div class="sub-tabs" id="dao-sub-tabs">
+      <button class="sub-tab-btn active" onclick="switchSub('dao','magor')">MAGOR</button>
+      <button class="sub-tab-btn" onclick="switchSub('dao','eyeke')">EYEKE</button>
+      <button class="sub-tab-btn" onclick="switchSub('dao','naron')">NARON</button>
+      <button class="sub-tab-btn" onclick="switchSub('dao','nerix')">NERI</button>
+      <button class="sub-tab-btn" onclick="switchSub('dao','veles')">VELES</button>
+      <button class="sub-tab-btn" onclick="switchSub('dao','kavian')">KAVIAN</button>
+    </div>
+
+    <!-- MAGOR -->
+    <div class="sub-panel active" id="sub-dao-magor">
+      <div class="section">
+        <div class="section-header"><div class="section-title">MAGOR <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="magorCountdown">–</span><span class="election-date" id="magorElectionDate"></span></div>
+        <div class="vote-panel" id="magorVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="magorSlots">
+              <div class="vote-slot" id="magor-slot-0">— vide —<button class="remove-vote" data-scope="magor" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="magor-slot-1">— vide —<button class="remove-vote" data-scope="magor" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="magorCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('magor')">Effacer</button>
+          <button class="btn-vote" id="magorVoteBtn" disabled onclick="submitVote('magor')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="magorStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → MAG</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="magorStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="magorMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="magorStakeBtn" disabled onclick="submitStake('magor')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="magorStakeSteps">
+            <div class="stake-step pending" id="magor-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="magor-tx-1"></div></div></div>
+            <div class="stake-step pending" id="magor-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → MAG</div><div class="step-tx" id="magor-tx-2"></div></div></div>
+            <div class="stake-step pending" id="magor-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des MAG → augmentation du Vote Power</div><div class="step-tx" id="magor-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="magorTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magor">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- EYEKE -->
+    <div class="sub-panel" id="sub-dao-eyeke">
+      <div class="section">
+        <div class="section-header"><div class="section-title">EYEKE <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="eyekeCountdown">–</span><span class="election-date" id="eyekeElectionDate"></span></div>
+        <div class="vote-panel" id="eyekeVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="eyekeSlots">
+              <div class="vote-slot" id="eyeke-slot-0">— vide —<button class="remove-vote" data-scope="eyeke" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="eyeke-slot-1">— vide —<button class="remove-vote" data-scope="eyeke" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="eyekeCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('eyeke')">Effacer</button>
+          <button class="btn-vote" id="eyekeVoteBtn" disabled onclick="submitVote('eyeke')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="eyekeStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → EYE</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="eyekeStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="eyekeMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="eyekeStakeBtn" disabled onclick="submitStake('eyeke')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="eyekeStakeSteps">
+            <div class="stake-step pending" id="eyeke-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="eyeke-tx-1"></div></div></div>
+            <div class="stake-step pending" id="eyeke-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → EYE</div><div class="step-tx" id="eyeke-tx-2"></div></div></div>
+            <div class="stake-step pending" id="eyeke-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des EYE → augmentation du Vote Power</div><div class="step-tx" id="eyeke-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="eyekeTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyeke">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- NARON -->
+    <div class="sub-panel" id="sub-dao-naron">
+      <div class="section">
+        <div class="section-header"><div class="section-title">NARON <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="naronCountdown">–</span><span class="election-date" id="naronElectionDate"></span></div>
+        <div class="vote-panel" id="naronVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="naronSlots">
+              <div class="vote-slot" id="naron-slot-0">— vide —<button class="remove-vote" data-scope="naron" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="naron-slot-1">— vide —<button class="remove-vote" data-scope="naron" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="naronCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('naron')">Effacer</button>
+          <button class="btn-vote" id="naronVoteBtn" disabled onclick="submitVote('naron')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="naronStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → NAR</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="naronStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="naronMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="naronStakeBtn" disabled onclick="submitStake('naron')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="naronStakeSteps">
+            <div class="stake-step pending" id="naron-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="naron-tx-1"></div></div></div>
+            <div class="stake-step pending" id="naron-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → NAR</div><div class="step-tx" id="naron-tx-2"></div></div></div>
+            <div class="stake-step pending" id="naron-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NAR → augmentation du Vote Power</div><div class="step-tx" id="naron-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="naronTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naron">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- NERI (scope: nerix) -->
+    <div class="sub-panel" id="sub-dao-nerix">
+      <div class="section">
+        <div class="section-header"><div class="section-title">NERI <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="nerixCountdown">–</span><span class="election-date" id="nerixElectionDate"></span></div>
+        <div class="vote-panel" id="nerixVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="nerixSlots">
+              <div class="vote-slot" id="nerix-slot-0">— vide —<button class="remove-vote" data-scope="nerix" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="nerix-slot-1">— vide —<button class="remove-vote" data-scope="nerix" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="nerixCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('nerix')">Effacer</button>
+          <button class="btn-vote" id="nerixVoteBtn" disabled onclick="submitVote('nerix')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="nerixStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → NER</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="nerixStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="nerixMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="nerixStakeBtn" disabled onclick="submitStake('nerix')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="nerixStakeSteps">
+            <div class="stake-step pending" id="nerix-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="nerix-tx-1"></div></div></div>
+            <div class="stake-step pending" id="nerix-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → NER</div><div class="step-tx" id="nerix-tx-2"></div></div></div>
+            <div class="stake-step pending" id="nerix-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NER → augmentation du Vote Power</div><div class="step-tx" id="nerix-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="nerixTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="nerix">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- VELES -->
+    <div class="sub-panel" id="sub-dao-veles">
+      <div class="section">
+        <div class="section-header"><div class="section-title">VELES <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="velesCountdown">–</span><span class="election-date" id="velesElectionDate"></span></div>
+        <div class="vote-panel" id="velesVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="velesSlots">
+              <div class="vote-slot" id="veles-slot-0">— vide —<button class="remove-vote" data-scope="veles" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="veles-slot-1">— vide —<button class="remove-vote" data-scope="veles" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="velesCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('veles')">Effacer</button>
+          <button class="btn-vote" id="velesVoteBtn" disabled onclick="submitVote('veles')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="velesStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → VEL</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="velesStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="velesMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="velesStakeBtn" disabled onclick="submitStake('veles')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="velesStakeSteps">
+            <div class="stake-step pending" id="veles-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="veles-tx-1"></div></div></div>
+            <div class="stake-step pending" id="veles-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → VEL</div><div class="step-tx" id="veles-tx-2"></div></div></div>
+            <div class="stake-step pending" id="veles-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des VEL → augmentation du Vote Power</div><div class="step-tx" id="veles-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="velesTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="veles">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- KAVIAN -->
+    <div class="sub-panel" id="sub-dao-kavian">
+      <div class="section">
+        <div class="section-header"><div class="section-title">KAVIAN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="kavianCountdown">–</span><span class="election-date" id="kavianElectionDate"></span></div>
+        <div class="vote-panel" id="kavianVotePanel">
+          <div class="vote-selection">
+            <span class="vote-label">VOTES :</span>
+            <div class="vote-slots" id="kavianSlots">
+              <div class="vote-slot" id="kavian-slot-0">— vide —<button class="remove-vote" data-scope="kavian" data-idx="0">✕</button></div>
+              <div class="vote-slot" id="kavian-slot-1">— vide —<button class="remove-vote" data-scope="kavian" data-idx="1">✕</button></div>
+            </div>
+            <span class="vote-count">(<span id="kavianCount">0</span>/2)</span>
+          </div>
+          <button class="btn-clear" onclick="clearVotes('kavian')">Effacer</button>
+          <button class="btn-vote" id="kavianVoteBtn" disabled onclick="submitVote('kavian')">&#9654; VOTER</button>
+        </div>
+        <div class="tx-status" id="kavianStatus"></div>
+        <div class="stake-panel">
+          <div class="stake-top">
+            <span class="stake-label">⬡ STAKER TLM → KAV</span>
+            <div class="stake-input-wrap">
+              <input type="number" class="stake-input" id="kavianStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
+              <span class="stake-unit">TLM</span>
+              <span class="stake-info">Mon stake : <span id="kavianMyStake">–</span></span>
+            </div>
+            <button class="btn-stake" id="kavianStakeBtn" disabled onclick="submitStake('kavian')">▲ STAKER</button>
+          </div>
+          <div class="stake-steps" id="kavianStakeSteps">
+            <div class="stake-step pending" id="kavian-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="kavian-tx-1"></div></div></div>
+            <div class="stake-step pending" id="kavian-step-2"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX2 — stake.worlds::stake</div><div class="step-desc">Conversion TLM → KAV</div><div class="step-tx" id="kavian-tx-2"></div></div></div>
+            <div class="stake-step pending" id="kavian-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des KAV → augmentation du Vote Power</div><div class="step-tx" id="kavian-tx-3"></div></div></div>
+          </div>
+        </div>
+        <div class="table-wrap"><table id="kavianTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavian">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th></tr></thead><tbody><tr class="loading-row"><td colspan="7">⟳ Chargement...</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+  </div><!-- /main-dao -->
+
+</div>
 <div id="toast"></div>
 
 <script>
@@ -906,13 +1281,15 @@ window.__waxClientCache = null;
   const ELECTED_COUNT = 5;
   const RPC           = "https://wax.eosphere.io";
   const WAX_CHAIN_ID  = '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4';
-  const scopes = ['eyekeunn', 'magorunn', 'naronunn'];
-  const specialNames = ['phlbq.wam', '.p2bu.wam', 'ffnjw.wam', 'c5qri.wam'];
+  const scopes        = ['eyekeunn', 'magorunn', 'naronunn', 'kavianunn', 'neriunn', 'velesunn'];         // UNION
+  const daoScopes     = ['magor', 'eyeke', 'naron', 'nerix', 'veles', 'kavian']; // DAO planètes
+  const specialNames  = ['phlbq.wam', '.p2bu.wam', 'ffnjw.wam', 'c5qri.wam'];
 
   // ── STATE ──
-  const candidatesData = { eyekeunn: [], magorunn: [], naronunn: [] };
-  const selectedVotes  = { eyekeunn: [], magorunn: [], naronunn: [] };
-  const sortOrders     = { eyekeunn: false, magorunn: false, naronunn: false };
+  const candidatesData = { eyekeunn: [], magorunn: [], naronunn: [], kavianunn: [], neriunn: [], velesunn: [], magor: [], eyeke: [], naron: [], nerix: [], veles: [], kavian: [] };
+  const selectedVotes  = { eyekeunn: [], magorunn: [], naronunn: [], kavianunn: [], neriunn: [], velesunn: [], magor: [], eyeke: [], naron: [], nerix: [], veles: [], kavian: [] };
+  const sortOrders     = { eyekeunn: false, magorunn: false, naronunn: false, kavianunn: false, neriunn: false, velesunn: false, magor: false, eyeke: false, naron: false, nerix: false, veles: false, kavian: false };
+  const periodLengths  = {}; // scope → periodlength en secondes
 
   let wax         = null;   // WaxJS instance
   let anchorLink  = null;   // AnchorLink instance
@@ -943,6 +1320,7 @@ window.__waxClientCache = null;
     badge.style.display = '';
     updateVoteButtons();
     scopes.forEach(s => fetchMyStake(s));
+    if (daoLoaded) daoScopes.forEach(s => fetchMyStake(s));
   }
 
   function resetWalletUI() {
@@ -1052,7 +1430,7 @@ window.__waxClientCache = null;
 
   async function loadCandidates(scope) {
     const tbody = document.querySelector(`#${scope}Table tbody`);
-    const colspanCount = 10; // toutes les tables ont maintenant TLM STACK
+    const colspanCount = 11; // toutes les tables ont maintenant TLM STACK
     tbody.innerHTML = `<tr class="loading-row"><td colspan="${colspanCount}">⟳ Chargement...</td></tr>`;
 
     for (const endpoint of RPC_ENDPOINTS) {
@@ -1085,10 +1463,10 @@ window.__waxClientCache = null;
 
   // ── VOTE HISTORY CACHE ──
   // voteHistory[scope][candidate_name] = { block_time, voters: [...] }
-  const voteHistory = { eyekeunn: {}, magorunn: {}, naronunn: {} };
+  const voteHistory = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {} };
 
   // ── TLM STACK CACHE (tous les scopes) ──
-  const tlmWeights = { eyekeunn: {}, magorunn: {}, naronunn: {} };
+  const tlmWeights = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {} };
 
   const HISTORY_ENDPOINTS = [
     'https://wax.eosphere.io',
@@ -1165,6 +1543,34 @@ window.__waxClientCache = null;
       }
     }
   }
+  // ── DECAY CALCULATION ──
+  function computeDecay(avgVoteTimestamp, scope) {
+    if (!avgVoteTimestamp || avgVoteTimestamp.startsWith('1970')) return null;
+    const avgDate   = new Date(avgVoteTimestamp + 'Z');
+    const nowMs     = Date.now();
+    const ageMs     = nowMs - avgDate.getTime();
+    if (ageMs < 0) return 0;
+    const ageDays   = ageMs / 86400000;
+    const period    = periodLengths[scope];
+    if (!period) return null;
+    const periodDays = period / 86400;
+    const pct = Math.min(100, (ageDays / periodDays) * 100);
+    return { pct: Math.round(pct * 10) / 10, ageDays: Math.round(ageDays) };
+  }
+
+  function decayCell(avgVoteTimestamp, scope) {
+    const d = computeDecay(avgVoteTimestamp, scope);
+    if (d === null) return '<td>–</td>';
+    const pct   = d.pct;
+    const color = pct < 33 ? '#00ff88' : pct < 66 ? '#ffd700' : '#ff4444';
+    return `<td>
+      <div class="decay-wrap">
+        <div class="decay-bar-bg"><div class="decay-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <span class="decay-pct" style="color:${color}">${pct}%</span>
+      </div>
+    </td>`;
+  }
+
   function renderTable(scope, data) {
     const tbody = document.querySelector(`#${scope}Table tbody`);
     tbody.innerHTML = "";
@@ -1207,6 +1613,7 @@ window.__waxClientCache = null;
             + ' <span style="font-size:9px;color:var(--text-muted)">' + symbol + '</span>';
       }
       const tlmStackCell = `<td style="color:var(--gold);font-size:11px">${tlmVal}</td>`;
+      const decayCol     = decayCell(row.avg_vote_time_stamp, scope);
 
       tr.innerHTML = `
         <td class="check-col">
@@ -1254,7 +1661,11 @@ window.__waxClientCache = null;
     }
 
     updateSlotsUI(scope);
-    renderTable(scope, candidatesData[scope]); // re-render to update disabled states
+    if (daoScopes.includes(scope)) {
+      renderDaoTable(scope, candidatesData[scope]);
+    } else {
+      renderTable(scope, candidatesData[scope]);
+    }
     updateVoteButtons();
   }
 
@@ -1296,13 +1707,14 @@ window.__waxClientCache = null;
   function clearVotes(scope) {
     selectedVotes[scope] = [];
     updateSlotsUI(scope);
-    renderTable(scope, candidatesData[scope]);
+    if (daoScopes.includes(scope)) renderDaoTable(scope, candidatesData[scope]);
+    else renderTable(scope, candidatesData[scope]);
     updateVoteButtons();
   }
 
   // ── VOTE BUTTONS STATE ──
   function updateVoteButtons() {
-    scopes.forEach(scope => {
+    [...scopes, ...daoScopes].forEach(scope => {
       const voteBtn  = document.getElementById(scope + "VoteBtn");
       const termsBtn = document.getElementById(scope + "TermsBtn");
       const stakeBtn = document.getElementById(scope + "StakeBtn");
@@ -1416,7 +1828,25 @@ window.__waxClientCache = null;
   const PLANET_TOKEN = {
     eyekeunn: 'EYEUNN',
     magorunn: 'MAGUNN',
-    naronunn: 'NARUNN'
+    naronunn: 'NARUNN',
+    kavianunn: 'KAVUNN',
+    neriunn:   'NERUNN',
+    velesunn:  'VELUNN',
+    magor:    'MAG',
+    eyeke:    'EYE',
+    naron:    'NAR',
+    nerix:    'NER',
+    veles:    'VEL',
+    kavian:   'KAV'
+  };
+
+  const PLANET_NAME = {
+    magor:  'magor.world',
+    eyeke:  'eyeke.world',
+    naron:  'naron.world',
+    nerix:  'neri.world',
+    veles:  'veles.world',
+    kavian: 'kavian.world'
   };
 
   function setStepState(scope, stepNum, state, txId) {
@@ -1490,7 +1920,7 @@ window.__waxClientCache = null;
         account: 'stake.worlds',
         name: 'stake',
         authorization: [{ actor: userAccount, permission: 'active' }],
-        data: { account: userAccount, planet_name: scope, quantity: tlmQty }
+        data: { account: userAccount, planet_name: PLANET_NAME[scope] || scope, quantity: tlmQty }
       });
       setStepState(scope, 2, 'done', extractTxId(res2));
       showToast('TX2 ✅ stake.worlds::stake OK', 'success');
@@ -1513,7 +1943,11 @@ window.__waxClientCache = null;
       setStepState(scope, 3, 'done', extractTxId(res3));
       showToast('✅ ' + planetQty + ' stakés ! Vote Power augmenté sur ' + scope.toUpperCase(), 'success');
       amountInput.value = '';
-      setTimeout(() => { fetchMyStake(scope); loadCandidates(scope); }, 4000);
+      setTimeout(() => {
+        fetchMyStake(scope);
+        if (daoScopes.includes(scope)) loadDaoCandidates(scope);
+        else loadCandidates(scope);
+      }, 4000);
     } catch(e) {
       setStepState(scope, 3, 'error', null);
       showToast('TX3 ❌ ' + (e.message || e), 'error');
@@ -1641,8 +2075,26 @@ window.__waxClientCache = null;
 
         if (!lastperiodtime || !periodlength) throw new Error('Champs manquants');
 
+        // Stocker pour le calcul du decay
+        periodLengths[scope] = periodlength;
+
+        // NERI et autres non-initialisées : lastperiodtime = epoch 1970
+        const lastPeriodDate = new Date(lastperiodtime + 'Z');
+        if (lastPeriodDate.getFullYear() < 2000) {
+          const cdEl = document.getElementById(scope + 'Countdown');
+          const dateEl = document.getElementById(scope + 'ElectionDate');
+          if (cdEl) { cdEl.textContent = 'Non initialisée'; cdEl.style.color = 'var(--text-muted)'; }
+          if (dateEl) dateEl.textContent = 'Aucune élection planifiée';
+          return;
+        }
+
         const nextElection = new Date(lastperiodtime + 'Z');
         nextElection.setSeconds(nextElection.getSeconds() + periodlength);
+
+        // Certaines planètes ont un décalage de +1h par rapport à l'UI AW
+        const offsetScopes = ['naronunn', 'kavianunn', 'neriunn', 'velesunn'];
+        if (offsetScopes.includes(scope)) nextElection.setHours(nextElection.getHours() + 1);
+
         startCountdown(scope, nextElection);
         return;
       } catch(e) {
@@ -1692,6 +2144,125 @@ window.__waxClientCache = null;
     setInterval(tick, 1000);
   }
 
+  // ── TAB SWITCHING ──
+  let daoLoaded = false;
+  function switchMain(panel) {
+    document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.main-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector('.main-tab-btn[onclick="switchMain(\'' + panel + '\')"]').classList.add('active');
+    document.getElementById('main-' + panel).classList.add('active');
+
+    if (panel === 'dao' && !daoLoaded) {
+      daoLoaded = true;
+      daoScopes.forEach(s => { loadDaoCandidates(s); loadElectionDate(s); });
+      if (userAccount) daoScopes.forEach(s => fetchMyStake(s));
+    }
+  }
+
+  function switchSub(group, scope) {
+    const container = document.getElementById(group === 'union' ? 'union-sub-tabs' : 'dao-sub-tabs');
+    container.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#main-' + group + ' .sub-panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('sub-' + group + '-' + scope).classList.add('active');
+  }
+
+  // ── DAO PLANET CANDIDATES (table simple, pas de vote) ──
+  async function loadDaoCandidates(scope) {
+    const tbody = document.querySelector('#' + scope + 'Table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="6">⟳ Chargement...</td></tr>';
+
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + '/v1/chain/get_table_rows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ json: true, code: 'dao.worlds', scope: scope, table: 'candidates', limit: 100 })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.rows) throw new Error('Pas de rows');
+        candidatesData[scope] = data.rows;
+        candidatesData[scope].sort((a,b) => Number(b.rank) - Number(a.rank));
+        renderDaoTable(scope, candidatesData[scope]);
+        return;
+      } catch(e) {
+        console.warn('[dao:' + scope + '] ' + endpoint + ':', e.message);
+      }
+    }
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="6" style="color:var(--red)">❌ Chargement impossible</td></tr>';
+  }
+
+  function renderDaoTable(scope, data) {
+    const tbody = document.querySelector('#' + scope + 'Table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const sorted = [...data].sort((a,b) => Number(b.rank) - Number(a.rank));
+    const electedNames = new Set(
+      sorted.filter(r => Number(r.rank) > 0).slice(0, ELECTED_COUNT).map(r => r.candidate_name)
+    );
+
+    data.forEach((row, index) => {
+      const isElected  = electedNames.has(row.candidate_name);
+      const isSelected = (selectedVotes[scope] || []).includes(row.candidate_name);
+      const rank       = index + 1;
+      const atMax      = (selectedVotes[scope] || []).length >= MAX_VOTES;
+      const checkDisabled = atMax && !isSelected ? 'disabled' : '';
+
+      const tr = document.createElement('tr');
+      if (isElected) tr.classList.add('elected');
+
+      tr.innerHTML = `
+        <td class="check-col">
+          <input type="checkbox" class="vote-check"
+            data-scope="${scope}"
+            data-candidate="${row.candidate_name}"
+            ${isSelected ? 'checked' : ''}
+            ${checkDisabled}>
+        </td>
+        <td><span class="rank-badge ${isElected ? 'elected' : 'not-elected'}">${rank}</span></td>
+        <td class="${specialNames.includes(row.candidate_name) ? 'candidate-name' : ''}">${row.candidate_name}</td>
+        <td>${Number(row.rank).toLocaleString()}</td>
+        <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
+        <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
+        <td>${row.number_voters}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tbody.querySelectorAll('.vote-check').forEach(cb => {
+      cb.addEventListener('change', onCheckboxChange);
+    });
+
+    // Remove-vote button listeners (vote panel slots)
+    const panel = document.getElementById(scope + 'VotePanel');
+    if (panel) {
+      panel.querySelectorAll('.remove-vote').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const s   = btn.dataset.scope;
+          const idx = parseInt(btn.dataset.idx);
+          selectedVotes[s].splice(idx, 1);
+          updateSlotsUI(s);
+          renderDaoTable(s, candidatesData[s]);
+          updateVoteButtons();
+        });
+      });
+    }
+
+    // Sort handler
+    tbody.closest('table').querySelectorAll('.rankHeader').forEach(th => {
+      th.onclick = () => {
+        sortOrders[scope] = !sortOrders[scope];
+        candidatesData[scope].sort((a,b) => sortOrders[scope]
+          ? Number(a.rank) - Number(b.rank)
+          : Number(b.rank) - Number(a.rank));
+        renderDaoTable(scope, candidatesData[scope]);
+      };
+    });
+  }
+
   function init() {
     scopes.forEach(loadCandidates);
     scopes.forEach(loadElectionDate);
@@ -1708,3 +2279,4 @@ window.__waxClientCache = null;
 </script>
 </body>
 </html>
+
