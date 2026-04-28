@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DAO PLANETES</title>
+  <title>DAO PLANETS</title>
 <!-- WaxJS : fichier local uniquement (même logique que Planetary Defense) -->
 <script>
 window.__waxjsLoadError = false;
@@ -764,17 +764,17 @@ window.__waxClientCache = null;
 <div class="header">
   <h1>🐝 DAO PLANETES 🐝</h1>
   <div class="header-controls">
-    <button id="refreshToggle">🔄 Rafraîchir</button>
+    <button id="refreshToggle">🔄 Refresh</button>
     <button id="rucheToggle" onclick="toggleRuche()" title="Mettre en surbrillance les membres La Ruche">🐝 La Ruche</button>
     <div id="wallet-status-bar" style="display:flex;align-items:center;gap:8px;font-size:11px;">
       <span class="status-dot" id="dot"></span>
-      <span id="wallet-text">Non connecté</span>
+      <span id="wallet-text">Not connected</span>
       <span id="wallet-badge-display" class="wallet-badge" style="display:none"></span>
     </div>
     <span id="account-display" style="font-size:11px;color:var(--green);display:none"></span>
     <button id="btn-wcw"        onclick="connectWCW()">🔗 WCW</button>
     <button id="btn-anchor"     onclick="connectAnchor()">⚓ Anchor</button>
-    <button id="btn-disconnect" onclick="disconnectWallet()" style="display:none">Déconnecter</button>
+    <button id="btn-disconnect" onclick="disconnectWallet()" style="display:none">Disconnect</button>
   </div>
 </div>
 
@@ -799,15 +799,15 @@ window.__waxClientCache = null;
     <!-- EYEKEUNN -->
     <div class="sub-panel active" id="sub-union-eyekeunn">
       <div class="section">
-        <div class="section-header"><div class="section-title">EYEKEUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="section-header"><div class="section-title">EYEKEUNN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="eyekeunnCountdown">–</span>
           <span class="election-date" id="eyekeunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="eyekeunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="eyekeunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="eyekeunnVotePanel">
           <div class="vote-selection">
@@ -818,21 +818,21 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="eyekeunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('eyekeunn')">Effacer</button>
-          <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('eyekeunn')">Erase</button>
+          <button class="btn-terms" id="eyekeunnTermsBtn" disabled onclick="signTerms('eyekeunn')">&#9997; TERMS</button>
+          <button class="btn-vote" id="eyekeunnVoteBtn" disabled onclick="submitVote('eyekeunn')">&#9654; SIGN YOUR VOTES</button>
         </div>
         <div class="tx-status" id="eyekeunnTermsStatus"></div>
         <div class="tx-status" id="eyekeunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → EYEUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → EYEUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="eyekeunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="eyekeunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="eyekeunnMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="eyekeunnStakeBtn" disabled onclick="submitStake('eyekeunn')">▲ STAKER</button>
+            <button class="btn-stake" id="eyekeunnStakeBtn" disabled onclick="submitStake('eyekeunn')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="eyekeunnStakeSteps">
             <div class="stake-step pending" id="eyekeunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="eyekeunn-tx-1"></div></div></div>
@@ -843,7 +843,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="eyekeunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -854,13 +854,13 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">MAGORUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="magorunnCountdown">–</span>
           <span class="election-date" id="magorunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="magorunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="magorunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="magorunnVotePanel">
           <div class="vote-selection">
@@ -871,21 +871,21 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="magorunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('magorunn')">Effacer</button>
+          <button class="btn-clear" onclick="clearVotes('magorunn')">Erase</button>
           <button class="btn-terms" id="magorunnTermsBtn" disabled onclick="signTerms('magorunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">&#9654; VOTER</button>
+          <button class="btn-vote" id="magorunnVoteBtn" disabled onclick="submitVote('magorunn')">&#9654; SIGN YOUR VOTES</button>
         </div>
         <div class="tx-status" id="magorunnTermsStatus"></div>
         <div class="tx-status" id="magorunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → MAGUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → MAGUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="magorunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="magorunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="magorunnMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="magorunnStakeBtn" disabled onclick="submitStake('magorunn')">▲ STAKER</button>
+            <button class="btn-stake" id="magorunnStakeBtn" disabled onclick="submitStake('magorunn')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="magorunnStakeSteps">
             <div class="stake-step pending" id="magorunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="magorunn-tx-1"></div></div></div>
@@ -896,7 +896,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="magorunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -905,15 +905,15 @@ window.__waxClientCache = null;
     <!-- NARONUNN -->
     <div class="sub-panel" id="sub-union-naronunn">
       <div class="section">
-        <div class="section-header"><div class="section-title">NARONUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="section-header"><div class="section-title">NARONUNN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="naronunnCountdown">–</span>
           <span class="election-date" id="naronunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="naronunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="naronunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="narorunnVotePanel">
           <div class="vote-selection">
@@ -924,21 +924,21 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="naronunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('naronunn')">Effacer</button>
-          <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('naronunn')">Erase</button>
+          <button class="btn-terms" id="naronunnTermsBtn" disabled onclick="signTerms('naronunn')">&#9997; TERMS</button>
+          <button class="btn-vote" id="naronunnVoteBtn" disabled onclick="submitVote('naronunn')">&#9654; SIGN YOUR VOTES</button>
         </div>
         <div class="tx-status" id="naronunnTermsStatus"></div>
         <div class="tx-status" id="naronunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → NARUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → NARUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="naronunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="naronunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="naronunnMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="naronunnStakeBtn" disabled onclick="submitStake('naronunn')">▲ STAKER</button>
+            <button class="btn-stake" id="naronunnStakeBtn" disabled onclick="submitStake('naronunn')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="naronunnStakeSteps">
             <div class="stake-step pending" id="naronunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="naronunn-tx-1"></div></div></div>
@@ -949,7 +949,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="naronunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -958,15 +958,15 @@ window.__waxClientCache = null;
     <!-- KAVIANUNN -->
     <div class="sub-panel" id="sub-union-kavianunn">
       <div class="section">
-        <div class="section-header"><div class="section-title">KAVIANUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="section-header"><div class="section-title">KAVIANUNN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="kavianunnCountdown">–</span>
           <span class="election-date" id="kavianunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="kavianunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="kavianunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="kavianunnVotePanel">
           <div class="vote-selection">
@@ -977,19 +977,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="kavianunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('kavianunn')">Effacer</button>
-          <button class="btn-terms" id="kavianunnTermsBtn" disabled onclick="signTerms('kavianunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="kavianunnVoteBtn" disabled onclick="submitVote('kavianunn')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('kavianunn')">Erase</button>
+          <button class="btn-terms" id="kavianunnTermsBtn" disabled onclick="signTerms('kavianunn')">&#9997; TERMS</button>
+          <button class="btn-vote" id="kavianunnVoteBtn" disabled onclick="submitVote('kavianunn')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="kavianunnTermsStatus"></div>
         <div class="tx-status" id="kavianunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → KAVUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → KAVUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="kavianunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="kavianunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="kavianunnMyStake">–</span></span>
             </div>
             <button class="btn-stake" id="kavianunnStakeBtn" disabled onclick="submitStake('kavianunn')">▲ STAKER</button>
           </div>
@@ -1002,7 +1002,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="kavianunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavianunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1010,15 +1010,15 @@ window.__waxClientCache = null;
     <!-- NERIUNN -->
     <div class="sub-panel" id="sub-union-neriunn">
       <div class="section">
-        <div class="section-header"><div class="section-title">NERIUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="section-header"><div class="section-title">NERIUNN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="neriunnCountdown">–</span>
           <span class="election-date" id="neriunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="neriunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="neriunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="neriunnVotePanel">
           <div class="vote-selection">
@@ -1029,21 +1029,21 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="neriunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('neriunn')">Effacer</button>
-          <button class="btn-terms" id="neriunnTermsBtn" disabled onclick="signTerms('neriunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="neriunnVoteBtn" disabled onclick="submitVote('neriunn')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('neriunn')">Erase</button>
+          <button class="btn-terms" id="neriunnTermsBtn" disabled onclick="signTerms('neriunn')">&#9997; TERMS</button>
+          <button class="btn-vote" id="neriunnVoteBtn" disabled onclick="submitVote('neriunn')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="neriunnTermsStatus"></div>
         <div class="tx-status" id="neriunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → NERUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → NERUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="neriunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="neriunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="neriunnMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="neriunnStakeBtn" disabled onclick="submitStake('neriunn')">▲ STAKER</button>
+            <button class="btn-stake" id="neriunnStakeBtn" disabled onclick="submitStake('neriunn')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="neriunnStakeSteps">
             <div class="stake-step pending" id="neriunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="neriunn-tx-1"></div></div></div>
@@ -1054,7 +1054,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="neriunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="neriunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1062,15 +1062,15 @@ window.__waxClientCache = null;
     <!-- VELESUNN -->
     <div class="sub-panel" id="sub-union-velesunn">
       <div class="section">
-        <div class="section-header"><div class="section-title">VELESUNN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
+        <div class="section-header"><div class="section-title">VELESUNN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
         <div class="election-bar">
-          <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
+          <span class="election-label">🗳 NEXT ELECTION</span>
           <span class="election-countdown" id="velesunnCountdown">–</span>
           <span class="election-date" id="velesunnElectionDate"></span>
         </div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="velesunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="velesunnCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="velesunnVotePanel">
           <div class="vote-selection">
@@ -1081,21 +1081,21 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="velesunnCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('velesunn')">Effacer</button>
-          <button class="btn-terms" id="velesunnTermsBtn" disabled onclick="signTerms('velesunn')">&#9997; TERMES</button>
-          <button class="btn-vote" id="velesunnVoteBtn" disabled onclick="submitVote('velesunn')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('velesunn')">Erase</button>
+          <button class="btn-terms" id="velesunnTermsBtn" disabled onclick="signTerms('velesunn')">&#9997; TERMS</button>
+          <button class="btn-vote" id="velesunnVoteBtn" disabled onclick="submitVote('velesunn')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="velesunnTermsStatus"></div>
         <div class="tx-status" id="velesunnStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → VELUNN</span>
+            <span class="stake-label">⬡ STAKE TLM → VELUNN</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="velesunnStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="velesunnMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="velesunnMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="velesunnStakeBtn" disabled onclick="submitStake('velesunn')">▲ STAKER</button>
+            <button class="btn-stake" id="velesunnStakeBtn" disabled onclick="submitStake('velesunn')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="velesunnStakeSteps">
             <div class="stake-step pending" id="velesunn-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="velesunn-tx-1"></div></div></div>
@@ -1106,7 +1106,7 @@ window.__waxClientCache = null;
         <div class="table-wrap">
           <table id="velesunnTable">
             <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="velesunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <tbody><tr class="loading-row"><td colspan="11">⟳ Loading...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1127,11 +1127,11 @@ window.__waxClientCache = null;
     <!-- MAGOR -->
     <div class="sub-panel active" id="sub-dao-magor">
       <div class="section">
-        <div class="section-header"><div class="section-title">MAGOR <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="magorCountdown">–</span><span class="election-date" id="magorElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">MAGOR <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="magorCountdown">–</span><span class="election-date" id="magorElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="magorCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="magorCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="magorVotePanel">
           <div class="vote-selection">
@@ -1142,19 +1142,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="magorCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('magor')">Effacer</button>
-          <button class="btn-vote" id="magorVoteBtn" disabled onclick="submitVote('magor')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('magor')">Erase</button>
+          <button class="btn-vote" id="magorVoteBtn" disabled onclick="submitVote('magor')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="magorStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → MAG</span>
+            <span class="stake-label">⬡ STAKE TLM → MAG</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="magorStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="magorMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="magorMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="magorStakeBtn" disabled onclick="submitStake('magor')">▲ STAKER</button>
+            <button class="btn-stake" id="magorStakeBtn" disabled onclick="submitStake('magor')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="magorStakeSteps">
             <div class="stake-step pending" id="magor-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="magor-tx-1"></div></div></div>
@@ -1169,11 +1169,11 @@ window.__waxClientCache = null;
     <!-- EYEKE -->
     <div class="sub-panel" id="sub-dao-eyeke">
       <div class="section">
-        <div class="section-header"><div class="section-title">EYEKE <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="eyekeCountdown">–</span><span class="election-date" id="eyekeElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">EYEKE <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="eyekeCountdown">–</span><span class="election-date" id="eyekeElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="eyekeCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="eyekeCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="eyekeVotePanel">
           <div class="vote-selection">
@@ -1184,19 +1184,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="eyekeCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('eyeke')">Effacer</button>
-          <button class="btn-vote" id="eyekeVoteBtn" disabled onclick="submitVote('eyeke')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('eyeke')">Erase</button>
+          <button class="btn-vote" id="eyekeVoteBtn" disabled onclick="submitVote('eyeke')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="eyekeStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → EYE</span>
+            <span class="stake-label">⬡ STAKE TLM → EYE</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="eyekeStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="eyekeMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="eyekeMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="eyekeStakeBtn" disabled onclick="submitStake('eyeke')">▲ STAKER</button>
+            <button class="btn-stake" id="eyekeStakeBtn" disabled onclick="submitStake('eyeke')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="eyekeStakeSteps">
             <div class="stake-step pending" id="eyeke-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="eyeke-tx-1"></div></div></div>
@@ -1211,11 +1211,11 @@ window.__waxClientCache = null;
     <!-- NARON -->
     <div class="sub-panel" id="sub-dao-naron">
       <div class="section">
-        <div class="section-header"><div class="section-title">NARON <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="naronCountdown">–</span><span class="election-date" id="naronElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">NARON <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="naronCountdown">–</span><span class="election-date" id="naronElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="naronCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="naronCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="naronVotePanel">
           <div class="vote-selection">
@@ -1226,19 +1226,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="naronCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('naron')">Effacer</button>
-          <button class="btn-vote" id="naronVoteBtn" disabled onclick="submitVote('naron')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('naron')">Erase</button>
+          <button class="btn-vote" id="naronVoteBtn" disabled onclick="submitVote('naron')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="naronStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → NAR</span>
+            <span class="stake-label">⬡ STAKE TLM → NAR</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="naronStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="naronMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="naronMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="naronStakeBtn" disabled onclick="submitStake('naron')">▲ STAKER</button>
+            <button class="btn-stake" id="naronStakeBtn" disabled onclick="submitStake('naron')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="naronStakeSteps">
             <div class="stake-step pending" id="naron-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="naron-tx-1"></div></div></div>
@@ -1253,11 +1253,11 @@ window.__waxClientCache = null;
     <!-- NERI (scope: nerix) -->
     <div class="sub-panel" id="sub-dao-nerix">
       <div class="section">
-        <div class="section-header"><div class="section-title">NERI <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="nerixCountdown">–</span><span class="election-date" id="nerixElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">NERI <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="nerixCountdown">–</span><span class="election-date" id="nerixElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="nerixCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CCURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="nerixCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="nerixVotePanel">
           <div class="vote-selection">
@@ -1268,19 +1268,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="nerixCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('nerix')">Effacer</button>
-          <button class="btn-vote" id="nerixVoteBtn" disabled onclick="submitVote('nerix')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('nerix')">Erase</button>
+          <button class="btn-vote" id="nerixVoteBtn" disabled onclick="submitVote('nerix')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="nerixStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → NER</span>
+            <span class="stake-label">⬡ STAKE TLM → NER</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="nerixStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="nerixMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="nerixMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="nerixStakeBtn" disabled onclick="submitStake('nerix')">▲ STAKER</button>
+            <button class="btn-stake" id="nerixStakeBtn" disabled onclick="submitStake('nerix')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="nerixStakeSteps">
             <div class="stake-step pending" id="nerix-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="nerix-tx-1"></div></div></div>
@@ -1295,11 +1295,11 @@ window.__waxClientCache = null;
     <!-- VELES -->
     <div class="sub-panel" id="sub-dao-veles">
       <div class="section">
-        <div class="section-header"><div class="section-title">VELES <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="velesCountdown">–</span><span class="election-date" id="velesElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">VELES <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="velesCountdown">–</span><span class="election-date" id="velesElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="velesCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="velesCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="velesVotePanel">
           <div class="vote-selection">
@@ -1310,19 +1310,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="velesCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('veles')">Effacer</button>
-          <button class="btn-vote" id="velesVoteBtn" disabled onclick="submitVote('veles')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('veles')">Erase</button>
+          <button class="btn-vote" id="velesVoteBtn" disabled onclick="submitVote('veles')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="velesStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → VEL</span>
+            <span class="stake-label">⬡ STAKE TLM → VEL</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="velesStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="velesMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="velesMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="velesStakeBtn" disabled onclick="submitStake('veles')">▲ STAKER</button>
+            <button class="btn-stake" id="velesStakeBtn" disabled onclick="submitStake('veles')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="velesStakeSteps">
             <div class="stake-step pending" id="veles-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="veles-tx-1"></div></div></div>
@@ -1337,11 +1337,11 @@ window.__waxClientCache = null;
     <!-- KAVIAN -->
     <div class="sub-panel" id="sub-dao-kavian">
       <div class="section">
-        <div class="section-header"><div class="section-title">KAVIAN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
-        <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="kavianCountdown">–</span><span class="election-date" id="kavianElectionDate"></span></div>
+        <div class="section-header"><div class="section-title">KAVIAN <span class="elected-badge">TOP 5 ELECTED</span></div></div>
+        <div class="election-bar"><span class="election-label">🗳 NEXT ELECTION</span><span class="election-countdown" id="kavianCountdown">–</span><span class="election-date" id="kavianElectionDate"></span></div>
         <div class="custodians-bar">
-          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
-          <div class="custodians-list" id="kavianCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+          <span class="custodians-label">👑 CURRENT CUSTODIANS</span>
+          <div class="custodians-list" id="kavianCustodians"><span class="custodians-loading">⟳ Loading...</span></div>
         </div>
         <div class="vote-panel" id="kavianVotePanel">
           <div class="vote-selection">
@@ -1352,19 +1352,19 @@ window.__waxClientCache = null;
             </div>
             <span class="vote-count">(<span id="kavianCount">0</span>/2)</span>
           </div>
-          <button class="btn-clear" onclick="clearVotes('kavian')">Effacer</button>
-          <button class="btn-vote" id="kavianVoteBtn" disabled onclick="submitVote('kavian')">&#9654; VOTER</button>
+          <button class="btn-clear" onclick="clearVotes('kavian')">Erase</button>
+          <button class="btn-vote" id="kavianVoteBtn" disabled onclick="submitVote('kavian')">&#9654; VOTE</button>
         </div>
         <div class="tx-status" id="kavianStatus"></div>
         <div class="stake-panel">
           <div class="stake-top">
-            <span class="stake-label">⬡ STAKER TLM → KAV</span>
+            <span class="stake-label">⬡ STAKE TLM → KAV</span>
             <div class="stake-input-wrap">
               <input type="number" class="stake-input" id="kavianStakeAmount" placeholder="0.0000" min="0.0001" step="0.0001">
               <span class="stake-unit">TLM</span>
-              <span class="stake-info">Mon stake : <span id="kavianMyStake">–</span></span>
+              <span class="stake-info">My stake : <span id="kavianMyStake">–</span></span>
             </div>
-            <button class="btn-stake" id="kavianStakeBtn" disabled onclick="submitStake('kavian')">▲ STAKER</button>
+            <button class="btn-stake" id="kavianStakeBtn" disabled onclick="submitStake('kavian')">▲ STAKE</button>
           </div>
           <div class="stake-steps" id="kavianStakeSteps">
             <div class="stake-step pending" id="kavian-step-1"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX1 — alien.worlds::transfer</div><div class="step-desc">Envoi des TLM → stake.worlds (memo: staking)</div><div class="step-tx" id="kavian-tx-1"></div></div></div>
@@ -2099,7 +2099,7 @@ window.__waxClientCache = null;
         data: { account: userAccount, quantity: planetQty }
       });
       setStepState(scope, 3, 'done', extractTxId(res3));
-      showToast('✅ ' + planetQty + ' stakés ! Vote Power augmenté sur ' + scope.toUpperCase(), 'success');
+      showToast('✅ ' + planetQty + ' staked ! Vote Power augmented on ' + scope.toUpperCase(), 'success');
       amountInput.value = '';
       setTimeout(() => {
         fetchMyStake(scope);
@@ -2297,7 +2297,7 @@ window.__waxClientCache = null;
       const diff = targetDate.getTime() - now;
 
       if (diff <= 0) {
-        cdEl.textContent = '⚡ ÉLECTION EN COURS';
+        cdEl.textContent = '⚡ ELECTION IN PROGRESS';
         cdEl.className = 'election-countdown imminent';
         return;
       }
