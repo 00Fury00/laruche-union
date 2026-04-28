@@ -700,6 +700,63 @@ window.__waxClientCache = null;
     .main-panel.active { display: block; }
     .sub-panel { display: none; }
     .sub-panel.active { display: block; }
+
+    /* ── CUSTODIANS BANNER ── */
+    .custodians-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .custodians-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .custodians-list {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .custodian-chip {
+      background: var(--green-bg);
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 3px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .custodian-chip::before {
+      content: '★';
+      font-size: 9px;
+      opacity: 0.7;
+    }
+    .custodians-loading {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── LA RUCHE HIGHLIGHT ── */
+    tr.ruche-highlight td { background: rgba(255, 200, 0, 0.08) !important; }
+    tr.ruche-highlight td:first-child { border-left: 3px solid gold; }
+    #rucheToggle { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); }
+    #rucheToggle.on { background: rgba(255,200,0,0.15); border-color: gold; color: gold; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -707,7 +764,8 @@ window.__waxClientCache = null;
 <div class="header">
   <h1>🐝 DAO PLANETES 🐝</h1>
   <div class="header-controls">
-    <button id="refreshToggle">⏹ Auto Refresh: OFF</button>
+    <button id="refreshToggle">🔄 Rafraîchir</button>
+    <button id="rucheToggle" onclick="toggleRuche()" title="Mettre en surbrillance les membres La Ruche">🐝 La Ruche</button>
     <div id="wallet-status-bar" style="display:flex;align-items:center;gap:8px;font-size:11px;">
       <span class="status-dot" id="dot"></span>
       <span id="wallet-text">Non connecté</span>
@@ -746,6 +804,10 @@ window.__waxClientCache = null;
           <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
           <span class="election-countdown" id="eyekeunnCountdown">–</span>
           <span class="election-date" id="eyekeunnElectionDate"></span>
+        </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="eyekeunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
         </div>
         <div class="vote-panel" id="eyekeunnVotePanel">
           <div class="vote-selection">
@@ -796,6 +858,10 @@ window.__waxClientCache = null;
           <span class="election-countdown" id="magorunnCountdown">–</span>
           <span class="election-date" id="magorunnElectionDate"></span>
         </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="magorunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="magorunnVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -844,6 +910,10 @@ window.__waxClientCache = null;
           <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
           <span class="election-countdown" id="naronunnCountdown">–</span>
           <span class="election-date" id="naronunnElectionDate"></span>
+        </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="naronunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
         </div>
         <div class="vote-panel" id="narorunnVotePanel">
           <div class="vote-selection">
@@ -894,6 +964,10 @@ window.__waxClientCache = null;
           <span class="election-countdown" id="kavianunnCountdown">–</span>
           <span class="election-date" id="kavianunnElectionDate"></span>
         </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="kavianunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="kavianunnVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -942,6 +1016,10 @@ window.__waxClientCache = null;
           <span class="election-countdown" id="neriunnCountdown">–</span>
           <span class="election-date" id="neriunnElectionDate"></span>
         </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="neriunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="neriunnVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -989,6 +1067,10 @@ window.__waxClientCache = null;
           <span class="election-label">🗳 PROCHAINE ÉLECTION</span>
           <span class="election-countdown" id="velesunnCountdown">–</span>
           <span class="election-date" id="velesunnElectionDate"></span>
+        </div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="velesunnCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
         </div>
         <div class="vote-panel" id="velesunnVotePanel">
           <div class="vote-selection">
@@ -1047,6 +1129,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">MAGOR <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="magorCountdown">–</span><span class="election-date" id="magorElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="magorCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="magorVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1085,6 +1171,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">EYEKE <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="eyekeCountdown">–</span><span class="election-date" id="eyekeElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="eyekeCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="eyekeVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1123,6 +1213,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">NARON <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="naronCountdown">–</span><span class="election-date" id="naronElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="naronCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="naronVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1161,6 +1255,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">NERI <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="nerixCountdown">–</span><span class="election-date" id="nerixElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="nerixCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="nerixVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1199,6 +1297,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">VELES <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="velesCountdown">–</span><span class="election-date" id="velesElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="velesCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="velesVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1237,6 +1339,10 @@ window.__waxClientCache = null;
       <div class="section">
         <div class="section-header"><div class="section-title">KAVIAN <span class="elected-badge">TOP 5 ÉLUS</span></div></div>
         <div class="election-bar"><span class="election-label">🗳 PROCHAINE ÉLECTION</span><span class="election-countdown" id="kavianCountdown">–</span><span class="election-date" id="kavianElectionDate"></span></div>
+        <div class="custodians-bar">
+          <span class="custodians-label">👑 CUSTODIANS ÉLUS</span>
+          <div class="custodians-list" id="kavianCustodians"><span class="custodians-loading">⟳ Chargement...</span></div>
+        </div>
         <div class="vote-panel" id="kavianVotePanel">
           <div class="vote-selection">
             <span class="vote-label">VOTES :</span>
@@ -1283,10 +1389,62 @@ window.__waxClientCache = null;
   const WAX_CHAIN_ID  = '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4';
   const scopes        = ['eyekeunn', 'magorunn', 'naronunn', 'kavianunn', 'neriunn', 'velesunn'];         // UNION
   const daoScopes     = ['magor', 'eyeke', 'naron', 'nerix', 'veles', 'kavian']; // DAO planètes
-  const specialNames  = ['phlbq.wam', '.p2bu.wam', 'ffnjw.wam', 'c5qri.wam'];
 
   // ── STATE ──
   const candidatesData = { eyekeunn: [], magorunn: [], naronunn: [], kavianunn: [], neriunn: [], velesunn: [], magor: [], eyeke: [], naron: [], nerix: [], veles: [], kavian: [] };
+
+  // ── MAP STATIQUE WAM → NOM ──
+  const WAM_NAMES = {
+    'ux1ru.wam':    'Yanuy',
+    '.p2bu.wam':    'fury',
+    'c5qri.wam':    'buldo',
+    '5thba.wam':    'Shrimp',
+    '42lra.wam':    'Pestilentia',
+    'phlbq.wam':    'MjaM',
+    'cairc.wam':    'XanderC',
+    'ancyw.wam':    'Snip |',
+    'gyeou.c.wam':  'Huey',
+    '2pn4u.c.wam':  'Skroutz',
+    '3pn4u.c.wam':  'ThreeBS',
+    'fgaqa.c.wam':  'Marvin',
+    'anyo.cabal':   'Anyobservation',
+    't1dbe.wam':    'izay21',
+    'oy4ra.wam':    'obocrypto',
+    'qpma4.c.wam':  'Gabriel',
+    'a52qw.wam':    'DrYunani',
+    'fr35y.wam':    'Phantom_Duck',
+    'b52qw.wam':    'Vyryn',
+    'im24u.c.wam':  'izay2121',
+    'neyau.wam':    'EOSUSA',
+    'ffnjw.wam':    'maserakane',
+    'bqcu4.wam':    'BARLAS',
+    '1zcq4.c.wam':  'starling',
+    'byxxo.wam':    'MoonLord',
+    'rfar.wam':     'ricardooow',
+    '1x1ci.wam':    'Shade',
+    '5t14m.c.wam':  'CryptOhioan',
+    'ompra.wam':    'f4x3',
+  };
+
+
+  // ── LA RUCHE ──
+  const RUCHE_WAMS = new Set([
+    'ux1ru.wam',   // Yanuy
+    '.p2bu.wam',   // fury
+    'c5qri.wam',   // buldo
+    'phlbq.wam',   // MjaM
+    'ancyw.wam',   // Snip
+    'ffnjw.wam',   // maserakane
+  ]);
+  let rucheFilterActive = false;
+  function wamDisplay(wam) {
+    const trimmed = wam.trim();
+    const name = WAM_NAMES[trimmed];
+    const bee = RUCHE_WAMS.has(trimmed) ? ' 🐝' : '';
+    return name
+      ? `<span style="font-weight:bold">${name}${bee}</span><br><span style="font-size:10px;color:var(--text-muted)">${trimmed}</span>`
+      : trimmed + bee;
+  }
   const selectedVotes  = { eyekeunn: [], magorunn: [], naronunn: [], kavianunn: [], neriunn: [], velesunn: [], magor: [], eyeke: [], naron: [], nerix: [], veles: [], kavian: [] };
   const sortOrders     = { eyekeunn: false, magorunn: false, naronunn: false, kavianunn: false, neriunn: false, velesunn: false, magor: false, eyeke: false, naron: false, nerix: false, veles: false, kavian: false };
   const periodLengths  = {}; // scope → periodlength en secondes
@@ -1296,8 +1454,6 @@ window.__waxClientCache = null;
   let anchorSess  = null;   // AnchorLink session
   let userAccount = null;
   let walletType  = null;   // 'wcw' | 'anchor'
-  let autoRefresh = false;
-  let refreshInterval = null;
 
   /* ── WALLET UI HELPERS ── */
   function setDot(cls) {
@@ -1581,7 +1737,6 @@ window.__waxClientCache = null;
     );
 
     data.forEach((row, index) => {
-      const isSpecial  = specialNames.includes(row.candidate_name);
       const isElected  = electedNames.has(row.candidate_name);
       const isSelected = selectedVotes[scope].includes(row.candidate_name);
       const rank       = index + 1;
@@ -1626,7 +1781,7 @@ window.__waxClientCache = null;
         <td>
           <span class="rank-badge ${isElected ? 'elected' : 'not-elected'}">${rank}</span>
         </td>
-        <td class="${isSpecial ? 'candidate-name' : ''}">${row.candidate_name}</td>
+        <td>${wamDisplay(row.candidate_name)}</td>
         <td>${Number(row.rank).toLocaleString()}</td>
         <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
@@ -1635,6 +1790,9 @@ window.__waxClientCache = null;
         <td style="font-size:10px;color:var(--text-muted)">${voters}</td>
         ${tlmStackCell}
       `;
+      if (rucheFilterActive && RUCHE_WAMS.has((tr.querySelector('.vote-check')?.dataset.candidate || '').trim())) {
+        tr.classList.add('ruche-highlight');
+      }
       tbody.appendChild(tr);
     });
 
@@ -2006,20 +2164,38 @@ window.__waxClientCache = null;
   });
 
   // ── AUTO REFRESH ──
-  function toggleRefresh() {
-    autoRefresh = !autoRefresh;
-    const btn = document.getElementById('refreshToggle');
-    if (autoRefresh) {
-      btn.textContent = '⏱ Auto Refresh: ON';
-      btn.classList.add('on');
-      refreshInterval = setInterval(() => scopes.forEach(loadCandidates), 10000);
-    } else {
-      btn.textContent = '⏹ Auto Refresh: OFF';
-      btn.classList.remove('on');
-      clearInterval(refreshInterval);
-    }
+
+  function toggleRuche() {
+    rucheFilterActive = !rucheFilterActive;
+    const btn = document.getElementById('rucheToggle');
+    btn.classList.toggle('on', rucheFilterActive);
+    // Appliquer/retirer la surbrillance sur toutes les lignes visibles
+    document.querySelectorAll('tbody tr').forEach(tr => {
+      const cb = tr.querySelector('.vote-check');
+      if (!cb) return;
+      const wam = cb.dataset.candidate;
+      if (wam && RUCHE_WAMS.has(wam.trim())) {
+        tr.classList.toggle('ruche-highlight', rucheFilterActive);
+      }
+    });
   }
-  document.getElementById('refreshToggle').addEventListener('click', toggleRefresh);
+
+  function manualRefresh() {
+    const btn = document.getElementById('refreshToggle');
+    btn.disabled = true;
+    btn.textContent = '⟳ Chargement...';
+    const active = document.querySelector('.main-tab-btn.active')?.getAttribute('onclick') || '';
+    const isDao = active.includes('dao');
+    const targets = isDao ? daoScopes : scopes;
+    const loaders = isDao
+      ? targets.map(s => Promise.all([loadDaoCandidates(s), loadElectionDate(s), loadCustodians(s)]))
+      : targets.map(s => loadCandidates(s));
+    Promise.all(loaders).finally(() => {
+      btn.disabled = false;
+      btn.textContent = '🔄 Rafraîchir';
+    });
+  }
+  document.getElementById('refreshToggle').addEventListener('click', manualRefresh);
 
   // ── TOAST ──
   let toastTimer = null;
@@ -2154,7 +2330,7 @@ window.__waxClientCache = null;
 
     if (panel === 'dao' && !daoLoaded) {
       daoLoaded = true;
-      daoScopes.forEach(s => { loadDaoCandidates(s); loadElectionDate(s); });
+      daoScopes.forEach(s => { loadDaoCandidates(s); loadElectionDate(s); loadCustodians(s); });
       if (userAccount) daoScopes.forEach(s => fetchMyStake(s));
     }
   }
@@ -2223,12 +2399,15 @@ window.__waxClientCache = null;
             ${checkDisabled}>
         </td>
         <td><span class="rank-badge ${isElected ? 'elected' : 'not-elected'}">${rank}</span></td>
-        <td class="${specialNames.includes(row.candidate_name) ? 'candidate-name' : ''}">${row.candidate_name}</td>
+        <td>${wamDisplay(row.candidate_name)}</td>
         <td>${Number(row.rank).toLocaleString()}</td>
         <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
         <td>${row.number_voters}</td>
       `;
+      if (rucheFilterActive && RUCHE_WAMS.has((tr.querySelector('.vote-check')?.dataset.candidate || '').trim())) {
+        tr.classList.add('ruche-highlight');
+      }
       tbody.appendChild(tr);
     });
 
@@ -2263,9 +2442,60 @@ window.__waxClientCache = null;
     });
   }
 
+  // ── CUSTODIANS (table custodians1 sur dao.worlds) ──
+  const custodiansBannerMap = {
+    eyekeunn:  { scope: 'eyekeunn',  bannerId: 'eyekeunnCustodians' },
+    magorunn:  { scope: 'magorunn',  bannerId: 'magorunnCustodians' },
+    naronunn:  { scope: 'naronunn',  bannerId: 'naronunnCustodians' },
+    kavianunn: { scope: 'kavianunn', bannerId: 'kavianunnCustodians' },
+    neriunn:   { scope: 'neriunn',   bannerId: 'neriunnCustodians' },
+    velesunn:  { scope: 'velesunn',  bannerId: 'velesunnCustodians' },
+    magor:  { scope: 'magor',  bannerId: 'magorCustodians' },
+    eyeke:  { scope: 'eyeke',  bannerId: 'eyekeCustodians' },
+    naron:  { scope: 'naron',  bannerId: 'naronCustodians' },
+    nerix:  { scope: 'nerix',  bannerId: 'nerixCustodians' },
+    veles:  { scope: 'veles',  bannerId: 'velesCustodians' },
+    kavian: { scope: 'kavian', bannerId: 'kavianCustodians' },
+  };
+
+  async function loadCustodians(scopeKey) {
+    const cfg = custodiansBannerMap[scopeKey];
+    if (!cfg) return;
+    const el = document.getElementById(cfg.bannerId);
+    if (!el) return;
+    el.innerHTML = '<span class="custodians-loading">⟳ Chargement...</span>';
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        const res = await fetch(endpoint + '/v1/chain/get_table_rows', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            json: true,
+            code: 'dao.worlds',
+            scope: cfg.scope,
+            table: 'custodians1',
+            limit: 20
+          })
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (!data.rows || !data.rows.length) {
+          el.innerHTML = '<span class="custodians-loading" style="color:var(--text-muted)">Aucun custodian élu</span>';
+          return;
+        }
+        el.innerHTML = data.rows.map(r => `<span class="custodian-chip" title="${r.cust_name}">${wamDisplay(r.cust_name)}</span>`).join('');
+        return;
+      } catch(e) {
+        console.warn('[custodians:' + cfg.scope + '] ' + endpoint + ':', e.message);
+      }
+    }
+    el.innerHTML = '<span class="custodians-loading" style="color:var(--red)">❌ Indisponible</span>';
+  }
+
   function init() {
     scopes.forEach(loadCandidates);
     scopes.forEach(loadElectionDate);
+    scopes.forEach(loadCustodians);
     if (window.location.protocol === 'file:') {
       setTimeout(() => showToast('⚠️ Ouvre via http://localhost, pas file://', 'error'), 500);
     }
