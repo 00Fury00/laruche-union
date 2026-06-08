@@ -1701,7 +1701,10 @@ window.__waxClientCache = null;
   }
   // ── DECAY CALCULATION ──
   const VOTE_DECAY_HALF_LIFE_SECONDS = 2629800;
-  const VOTE_DECAY_HALF_LIFE_DAYS = Math.round((VOTE_DECAY_HALF_LIFE_SECONDS / 86400) * 10) / 10;
+  const formatVotePower = value => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n.toLocaleString('fr-FR', { maximumFractionDigits: 3 }) : '–';
+  };
 
   function computeDecay(avgVoteTimestamp, scope) {
     if (!avgVoteTimestamp || avgVoteTimestamp.startsWith('1970')) return null;
@@ -1718,12 +1721,14 @@ window.__waxClientCache = null;
     };
   }
 
-  function decayCell(avgVoteTimestamp, scope) {
+  function decayCell(avgVoteTimestamp, scope, votePower) {
     const d = computeDecay(avgVoteTimestamp, scope);
     if (d === null) return '<td title="Aucune date moyenne de vote disponible">–</td>';
     const pct   = d.pct;
     const color = pct > 66 ? '#00ff88' : pct > 33 ? '#ffd700' : '#ff4444';
-    const tooltip = `Vote power restant: ${pct}%\nAge moyen des votes: ${d.ageDays} jour${d.ageDays > 1 ? 's' : ''}\nDemi-vie du decay: ${VOTE_DECAY_HALF_LIFE_DAYS} jours`;
+    const baseVotePower = Number(votePower);
+    const decayedVotePower = Number.isFinite(baseVotePower) ? baseVotePower * (pct / 100) : NaN;
+    const tooltip = `${pct}% de ${formatVotePower(votePower)} = ${formatVotePower(decayedVotePower)} vote power`;
     return `<td title="${tooltip}">
       <div class="decay-wrap">
         <div class="decay-bar-bg"><div class="decay-bar-fill" style="width:${pct}%;background:${color}"></div></div>
@@ -1773,7 +1778,8 @@ window.__waxClientCache = null;
             + ' <span style="font-size:9px;color:var(--text-muted)">' + symbol + '</span>';
       }
       const tlmStackCell = `<td style="color:var(--gold);font-size:11px">${tlmVal}</td>`;
-      const decayCol     = decayCell(row.avg_vote_time_stamp, scope);
+      const votePower    = row.total_vote_power / 10000;
+      const decayCol     = decayCell(row.avg_vote_time_stamp, scope, votePower);
 
       tr.innerHTML = `
         <td class="check-col">
@@ -1788,7 +1794,7 @@ window.__waxClientCache = null;
         </td>
         <td>${wamDisplay(row.candidate_name)}</td>
         <td>${Number(row.rank).toLocaleString()}</td>
-        <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
+        <td>${votePower.toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
         <td>${row.number_voters}</td>
         <td style="color:var(--green);font-size:11px">${lastVote}</td>
@@ -2414,7 +2420,7 @@ window.__waxClientCache = null;
         <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
         <td>${row.number_voters}</td>
-        ${decayCell(row.avg_vote_time_stamp, scope)}
+        ${decayCell(row.avg_vote_time_stamp, scope, row.total_vote_power / 10000)}
       `;
       if (rucheFilterActive && RUCHE_WAMS.has((tr.querySelector('.vote-check')?.dataset.candidate || '').trim())) {
         tr.classList.add('ruche-highlight');
