@@ -1701,6 +1701,7 @@ window.__waxClientCache = null;
   }
   // ── DECAY CALCULATION ──
   const VOTE_DECAY_HALF_LIFE_SECONDS = 2629800;
+  const VOTE_DECAY_HALF_LIFE_DAYS = Math.round((VOTE_DECAY_HALF_LIFE_SECONDS / 86400) * 10) / 10;
 
   function computeDecay(avgVoteTimestamp, scope) {
     if (!avgVoteTimestamp || avgVoteTimestamp.startsWith('1970')) return null;
@@ -1719,10 +1720,11 @@ window.__waxClientCache = null;
 
   function decayCell(avgVoteTimestamp, scope) {
     const d = computeDecay(avgVoteTimestamp, scope);
-    if (d === null) return '<td>–</td>';
+    if (d === null) return '<td title="Aucune date moyenne de vote disponible">–</td>';
     const pct   = d.pct;
     const color = pct > 66 ? '#00ff88' : pct > 33 ? '#ffd700' : '#ff4444';
-    return `<td title="Vote power restant après decay">
+    const tooltip = `Vote power restant: ${pct}%\nAge moyen des votes: ${d.ageDays} jour${d.ageDays > 1 ? 's' : ''}\nDemi-vie du decay: ${VOTE_DECAY_HALF_LIFE_DAYS} jours`;
+    return `<td title="${tooltip}">
       <div class="decay-wrap">
         <div class="decay-bar-bg"><div class="decay-bar-fill" style="width:${pct}%;background:${color}"></div></div>
         <span class="decay-pct" style="color:${color}">${pct}%</span>
@@ -2518,4 +2520,3 @@ window.__waxClientCache = null;
 </script>
 </body>
 </html>
-
