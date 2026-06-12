@@ -596,6 +596,38 @@ window.__waxClientCache = null;
       text-align: right;
     }
 
+    /* ── VOTANTS / DÉTAIL ── */
+    .votants-cell {
+      cursor: pointer;
+      text-decoration: underline dotted;
+      text-decoration-color: var(--text-muted);
+    }
+    .votants-cell:hover {
+      color: var(--green);
+    }
+    .voters-detail-row td {
+      background: var(--surface2);
+      padding: 10px 14px;
+    }
+    .voters-detail-power {
+      font-size: 12px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .voters-detail-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .voter-pill {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 11px;
+    }
+
     /* ── ELECTION COUNTDOWN ── */
     .election-bar {
       background: var(--surface);
@@ -842,8 +874,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="eyekeunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyekeunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -895,8 +927,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="magorunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magorunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -948,8 +980,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="naronunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naronunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1001,8 +1033,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="kavianunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavianunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavianunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1053,8 +1085,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="neriunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="neriunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="neriunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1105,8 +1137,8 @@ window.__waxClientCache = null;
         </div>
         <div class="table-wrap">
           <table id="velesunnTable">
-            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="velesunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>Dernier vote reçu</th><th>Votants récents</th><th>DECAY</th><th>TLM STACK</th></tr></thead>
-            <tbody><tr class="loading-row"><td colspan="11">⟳ Chargement...</td></tr></tbody>
+            <thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="velesunn">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead>
+            <tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -1162,7 +1194,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="magor-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des MAG → augmentation du Vote Power</div><div class="step-tx" id="magor-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="magorTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magor">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="magorTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="magor">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1204,7 +1236,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="eyeke-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des EYE → augmentation du Vote Power</div><div class="step-tx" id="eyeke-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="eyekeTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyeke">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="eyekeTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="eyeke">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1246,7 +1278,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="naron-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NAR → augmentation du Vote Power</div><div class="step-tx" id="naron-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="naronTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naron">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="naronTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="naron">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1288,7 +1320,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="nerix-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des NER → augmentation du Vote Power</div><div class="step-tx" id="nerix-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="nerixTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="nerix">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="nerixTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="nerix">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1330,7 +1362,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="veles-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des VEL → augmentation du Vote Power</div><div class="step-tx" id="veles-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="velesTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="veles">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="velesTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="veles">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1372,7 +1404,7 @@ window.__waxClientCache = null;
             <div class="stake-step pending" id="kavian-step-3"><span class="step-icon">⬜</span><div class="step-body"><div class="step-title">TX3 — token.worlds::stake</div><div class="step-desc">Stake des KAV → augmentation du Vote Power</div><div class="step-tx" id="kavian-tx-3"></div></div></div>
           </div>
         </div>
-        <div class="table-wrap"><table id="kavianTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavian">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th></tr></thead><tbody><tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr></tbody></table></div>
+        <div class="table-wrap"><table id="kavianTable"><thead><tr><th class="check-col">✓</th><th>#</th><th>Candidat</th><th class="sortable rankHeader" data-scope="kavian">Rank ▲▼</th><th>Vote Power</th><th>Actif</th><th>Votants</th><th>DECAY</th><th>TLM STACK</th><th>STACK TIME</th></tr></thead><tbody><tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr></tbody></table></div>
       </div>
     </div>
 
@@ -1586,7 +1618,7 @@ window.__waxClientCache = null;
 
   async function loadCandidates(scope) {
     const tbody = document.querySelector(`#${scope}Table tbody`);
-    const colspanCount = 11; // toutes les tables ont maintenant TLM STACK
+    const colspanCount = 10; // toutes les tables ont maintenant TLM STACK + STACK TIME
     tbody.innerHTML = `<tr class="loading-row"><td colspan="${colspanCount}">⟳ Chargement...</td></tr>`;
 
     for (const endpoint of RPC_ENDPOINTS) {
@@ -1608,6 +1640,7 @@ window.__waxClientCache = null;
         candidatesData[scope] = data.rows;
         await fetchVoteHistory(scope);
         await fetchTlmStack(scope, data.rows);
+        await fetchStakeTime(scope);
         sortTableByRank(scope, false);
         return; // succès, on arrête
       } catch(e) {
@@ -1619,10 +1652,13 @@ window.__waxClientCache = null;
 
   // ── VOTE HISTORY CACHE ──
   // voteHistory[scope][candidate_name] = { block_time, voters: [...] }
-  const voteHistory = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {} };
+  const voteHistory = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {}, magor: {}, eyeke: {}, naron: {}, nerix: {}, veles: {}, kavian: {} };
 
   // ── TLM STACK CACHE (tous les scopes) ──
   const tlmWeights = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {}, magor: {}, eyeke: {}, naron: {}, nerix: {}, veles: {}, kavian: {} };
+
+  // ── STACK TIME CACHE (tous les scopes) ──
+  const tlmStakeTime = { eyekeunn: {}, magorunn: {}, naronunn: {}, kavianunn: {}, neriunn: {}, velesunn: {}, magor: {}, eyeke: {}, naron: {}, nerix: {}, veles: {}, kavian: {} };
 
   const HISTORY_ENDPOINTS = [
     'https://wax.eosphere.io',
@@ -1634,28 +1670,97 @@ window.__waxClientCache = null;
     // token.worlds / table stakes / scope = dac_id → champ "stake"
     for (const endpoint of RPC_ENDPOINTS) {
       try {
-        const res = await fetch(endpoint + "/v1/chain/get_table_rows", {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            json: true,
-            code: "token.worlds",
-            scope: scope,
-            table: "stakes",
-            limit: 200
-          })
-        });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        if (!data.rows) throw new Error('Pas de rows');
-        data.rows.forEach(row => {
-          tlmWeights[scope][row.account] = row.stake;
-        });
+        let lowerBound = '';
+        let more = true;
+        while (more) {
+          const res = await fetch(endpoint + "/v1/chain/get_table_rows", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              json: true,
+              code: "token.worlds",
+              scope: scope,
+              table: "stakes",
+              limit: 200,
+              lower_bound: lowerBound
+            })
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (!data.rows) throw new Error('Pas de rows');
+          data.rows.forEach(row => {
+            tlmWeights[scope][row.account] = row.stake;
+          });
+          more = !!data.more && data.rows.length > 0;
+          if (more) {
+            const nextBound = data.next_key || data.rows[data.rows.length - 1].account;
+            if (nextBound === lowerBound) break; // garde-fou anti-boucle infinie
+            lowerBound = nextBound;
+          }
+        }
         return;
       } catch(e) {
         console.warn(`[tlmStack:${scope}] Échec ${endpoint}:`, e.message);
       }
     }
+  }
+
+  async function fetchStakeTime(scope) {
+    // token.worlds / table staketime / scope = dac_id → horodatage du stake
+    for (const endpoint of RPC_ENDPOINTS) {
+      try {
+        let lowerBound = '';
+        let more = true;
+        while (more) {
+          const res = await fetch(endpoint + "/v1/chain/get_table_rows", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              json: true,
+              code: "token.worlds",
+              scope: scope,
+              table: "staketime",
+              limit: 200,
+              lower_bound: lowerBound
+            })
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (!data.rows) throw new Error('Pas de rows');
+          data.rows.forEach(row => {
+            tlmStakeTime[scope][row.account] = row;
+          });
+          more = !!data.more && data.rows.length > 0;
+          if (more) {
+            const nextBound = data.next_key || data.rows[data.rows.length - 1].account;
+            if (nextBound === lowerBound) break; // garde-fou anti-boucle infinie
+            lowerBound = nextBound;
+          }
+        }
+        return;
+      } catch(e) {
+        console.warn(`[stakeTime:${scope}] Échec ${endpoint}:`, e.message);
+      }
+    }
+  }
+
+  // Formate la valeur de la table staketime : { account, delay } où delay est en secondes
+  function formatStakeTime(row) {
+    if (!row) return '–';
+    const delay = Number(row.delay);
+    if (isNaN(delay)) return '–';
+    if (delay <= 0) return '0s';
+
+    const days    = Math.floor(delay / 86400);
+    const hours   = Math.floor((delay % 86400) / 3600);
+    const minutes = Math.floor((delay % 3600) / 60);
+
+    const parts = [];
+    if (days)    parts.push(`${days}j`);
+    if (hours)   parts.push(`${hours}h`);
+    if (!days && minutes) parts.push(`${minutes}min`);
+
+    return parts.length ? parts.join(' ') : `${delay}s`;
   }
 
   async function fetchVoteHistory(scope) {
@@ -1757,15 +1862,6 @@ window.__waxClientCache = null;
       const atMax = selectedVotes[scope].length >= MAX_VOTES;
       const checkDisabled = atMax && !isSelected ? 'disabled' : '';
 
-      // Données issues de l'historique des transactions
-      const hist     = voteHistory[scope][row.candidate_name];
-      const lastVote = hist
-        ? hist.block_time.replace('T', ' ').replace(/\.\d+$/, '')
-        : '–';
-      const voters   = hist && hist.voters.length
-        ? hist.voters.slice(0, 3).join(', ') + (hist.voters.length > 3 ? ` +${hist.voters.length - 3}` : '')
-        : '–';
-
       // TLM STACK
       const stakeStr = tlmWeights[scope]?.[row.candidate_name];
       let tlmVal = '–';
@@ -1778,6 +1874,7 @@ window.__waxClientCache = null;
             + ' <span style="font-size:9px;color:var(--text-muted)">' + symbol + '</span>';
       }
       const tlmStackCell = `<td style="color:var(--gold);font-size:11px">${tlmVal}</td>`;
+      const stakeTimeCell = `<td style="font-size:10px;color:var(--text-muted)">${formatStakeTime(tlmStakeTime[scope]?.[row.candidate_name])}</td>`;
       const votePower    = row.total_vote_power / 10000;
       const decayCol     = decayCell(row.avg_vote_time_stamp, scope, votePower);
 
@@ -1796,15 +1893,17 @@ window.__waxClientCache = null;
         <td>${Number(row.rank).toLocaleString()}</td>
         <td>${votePower.toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
-        <td>${row.number_voters}</td>
-        <td style="color:var(--green);font-size:11px">${lastVote}</td>
-        <td style="font-size:10px;color:var(--text-muted)">${voters}</td>
+        <td class="votants-cell" title="Cliquer pour voir le détail des votants">${row.number_voters}</td>
         ${decayCol}
         ${tlmStackCell}
+        ${stakeTimeCell}
       `;
       if (rucheFilterActive && RUCHE_WAMS.has((tr.querySelector('.vote-check')?.dataset.candidate || '').trim())) {
         tr.classList.add('ruche-highlight');
       }
+      tr.dataset.scope = scope;
+      tr.dataset.candidate = row.candidate_name;
+      tr.dataset.votePower = votePower;
       tbody.appendChild(tr);
     });
 
@@ -1813,7 +1912,50 @@ window.__waxClientCache = null;
     });
   }
 
-  // ── CHECKBOX HANDLER ──
+  // ── DÉTAIL DES VOTANTS (clic sur la cellule "Votants") ──
+  document.addEventListener('click', (e) => {
+    const cell = e.target.closest('.votants-cell');
+    if (!cell) return;
+
+    const tr = cell.closest('tr');
+    if (!tr) return;
+
+    // Si la ligne de détail existe déjà, on la retire (toggle)
+    const next = tr.nextElementSibling;
+    if (next && next.classList.contains('voters-detail-row')) {
+      next.remove();
+      return;
+    }
+
+    // On retire les autres lignes de détail éventuellement ouvertes dans cette table
+    tr.closest('tbody').querySelectorAll('.voters-detail-row').forEach(r => r.remove());
+
+    const scope     = tr.dataset.scope;
+    const candidate = tr.dataset.candidate;
+    const votePower = Number(tr.dataset.votePower);
+    const colspan   = tr.children.length;
+
+    const hist   = voteHistory[scope]?.[candidate];
+    const voters = hist?.voters || [];
+
+    const votersHtml = voters.length
+      ? voters.map(v => `<span class="voter-pill">${wamDisplay(v)}</span>`).join('')
+      : `<span style="color:var(--text-muted)">Aucun votant détecté dans l'historique récent</span>`;
+
+    const detailRow = document.createElement('tr');
+    detailRow.className = 'voters-detail-row';
+    detailRow.innerHTML = `
+      <td colspan="${colspan}">
+        <div class="voters-detail">
+          <div class="voters-detail-power">Vote Power attribué au candidat : <strong>${formatVotePower(votePower)}</strong></div>
+          <div class="voters-detail-list">${votersHtml}</div>
+        </div>
+      </td>
+    `;
+    tr.after(detailRow);
+  });
+
+
   function onCheckboxChange(e) {
     const scope     = e.target.dataset.scope;
     const candidate = e.target.dataset.candidate;
@@ -2363,7 +2505,7 @@ window.__waxClientCache = null;
   async function loadDaoCandidates(scope) {
     const tbody = document.querySelector('#' + scope + 'Table tbody');
     if (!tbody) return;
-    tbody.innerHTML = '<tr class="loading-row"><td colspan="9">⟳ Chargement...</td></tr>';
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="10">⟳ Chargement...</td></tr>';
 
     for (const endpoint of RPC_ENDPOINTS) {
       try {
@@ -2378,13 +2520,15 @@ window.__waxClientCache = null;
         candidatesData[scope] = data.rows;
         candidatesData[scope].sort((a,b) => Number(b.rank) - Number(a.rank));
         await fetchTlmStack(scope, data.rows);
+        await fetchVoteHistory(scope);
+        await fetchStakeTime(scope);
         renderDaoTable(scope, candidatesData[scope]);
         return;
       } catch(e) {
         console.warn('[dao:' + scope + '] ' + endpoint + ':', e.message);
       }
     }
-    tbody.innerHTML = '<tr class="loading-row"><td colspan="9" style="color:var(--red)">❌ Chargement impossible</td></tr>';
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="10" style="color:var(--red)">❌ Chargement impossible</td></tr>';
   }
 
   function renderDaoTable(scope, data) {
@@ -2419,6 +2563,7 @@ window.__waxClientCache = null;
             + ' <span style="font-size:9px;color:var(--text-muted)">' + symbol + '</span>';
       }
       const tlmStackCell = `<td style="color:var(--gold);font-size:11px">${tlmVal}</td>`;
+      const stakeTimeCell = `<td style="font-size:10px;color:var(--text-muted)">${formatStakeTime(tlmStakeTime[scope]?.[row.candidate_name])}</td>`;
 
       tr.innerHTML = `
         <td class="check-col">
@@ -2433,13 +2578,17 @@ window.__waxClientCache = null;
         <td>${Number(row.rank).toLocaleString()}</td>
         <td>${(row.total_vote_power / 10000).toLocaleString('fr-FR', {maximumFractionDigits:3})}</td>
         <td class="active-${row.is_active}">${row.is_active ? '✓' : '–'}</td>
-        <td>${row.number_voters}</td>
+        <td class="votants-cell" title="Cliquer pour voir le détail des votants">${row.number_voters}</td>
         ${decayCell(row.avg_vote_time_stamp, scope, row.total_vote_power / 10000)}
         ${tlmStackCell}
+        ${stakeTimeCell}
       `;
       if (rucheFilterActive && RUCHE_WAMS.has((tr.querySelector('.vote-check')?.dataset.candidate || '').trim())) {
         tr.classList.add('ruche-highlight');
       }
+      tr.dataset.scope = scope;
+      tr.dataset.candidate = row.candidate_name;
+      tr.dataset.votePower = row.total_vote_power / 10000;
       tbody.appendChild(tr);
     });
 
